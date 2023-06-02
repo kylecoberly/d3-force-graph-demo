@@ -1,70 +1,16 @@
 import * as d3 from "d3"
-
-// 1. Access the data
-import data from "./data.json"
-const { nodes, links } = data
-// const { nodes, links } = await d3.json("./data.json")
-
-const linkCounts = links.reduce((counts, link) => {
-	counts[link.source] = counts[link.source] ?? { from: 0, to: 0 }
-	counts[link.target] = counts[link.target] ?? { from: 0, to: 0 }
-	counts[link.source].from = counts[link.source].from + 1
-	counts[link.target].to = counts[link.target].to + 1
-	return counts
-}, {})
-
-// 2. Create chart dimensions
-const { width, height, margin } = getDimensions({
-	// width: d3.min([window.innerWidth * 0.9, window.innerHeight * 0.9]),
-	width: window.innerWidth * 0.9,
-	height: window.innerHeight * 0.9,
-	margin: {
-		top: 10,
-		right: 10,
-		bottom: 10,
-		left: 10,
-	},
-})
-const { top, right, bottom, left } = margin
-
-// 3. Draw canvas (chart and bounds)
-const container = d3.select("#container")
-	.append("svg")
-	.attr("width", width)
-	.attr("preserveAspectRatio", "xMinYMin meet")
-	.attr("viewBox", [-50, -50, 100, 100])
-
-const bounds = container
-	.append("g")
-// 	.style("transform", `translate(
-// 	${left}px,
-// 	${top}px
-// )`)
-
-const zoomCover = container.append("rect")
-	.attr("width", width)
-	.attr("height", height)
-	.style("fill", "none")
-	.style("pointer-events", "all")
+import { nodes, links, linkCounts } from "./data"
+import { container, bounds, width, height, margin, top, right, bottom, left } from "./chart"
+import { collisionForce, xForce, yForce, linkForce, chargeForce } from "./forces"
 
 // 4. Create scales (for every data-to-physical transformation you need)
 const simulation = d3.forceSimulation()
-	.force("charge", d3.forceManyBody()
-		.strength(-100)
-	).force("x", d3.forceX(0))
-	.force("y", d3.forceY(0))
-	.force("collision", d3.forceCollide(3))
-	.force("link", d3.forceLink()
-		.id(d => d.id)
-		.distance(3)
-		.strength(link => {
-			if (link.source.group === link.target.group) {
-				return 1
-			} else {
-				return 0.1
-			}
-		})
-	).nodes(nodes)
+	.force("charge", chargeForce)
+	.force("x", xForce)
+	.force("y", yForce)
+	.force("collision", collisionForce)
+	.force("link", linkForce)
+	.nodes(nodes)
 
 // 5. Draw data
 
@@ -94,43 +40,8 @@ simulation.on("tick", ticked({ node, circle, link, text }))
 	.force("link")
 	.links(links)
 
-// 6. Draw peripherals (axes, labels, legends)
-
-// Arrows
-container
-	.append("defs")
-	.append("marker")
-	.attr("id", "arrow")
-	.attr("viewBox", [0, 0, 10, 10])
-	.attr("refX", 5)
-	.attr("refY", 5)
-	.attr("markerWidth", 3)
-	.attr("markerHeight", 3)
-	.attr("orient", "auto")
-	.attr("class", "arrow")
-	.append("path")
-	.attr("d", `
-		M 0 0
-		L 10 5
-		L 0 10
-		z
-	`)
-
-
 // 7. Set up interactions (event listeners)
 
-// Enable Zoom
-const zoom = d3.zoom()
-	.scaleExtent([1 / 3, 6])
-	.on("zoom", ({ transform }) => bounds.attr("transform", transform))
-
-zoomCover
-	.call(zoom)
-	.call(zoom.translateTo, 0, 0);
-
-d3.select(window).on("resize", () => {
-	simulation.restart()
-})
 
 
 // Utilities
@@ -240,20 +151,6 @@ function ticked({ node, circle, link, text }) {
 	}
 }
 
-// Get dimensions, including dynamic ones
-function getDimensions(baseDimensions) {
-	const { height, width, margin } = baseDimensions
-	const { top, bottom, left, right } = margin
-	const boundedDimensions = {
-		boundedHeight: height - top - bottom,
-		boundedWidth: width - left - right,
-	}
-
-	return {
-		...baseDimensions,
-		...boundedDimensions,
-	}
-}
 
 /*
 ////////
