@@ -2,9 +2,9 @@
 const { nodes, links } = await d3.json("data.json")
 
 // 2. Create chart dimensions
-const { width, margin } = getDimensions({
+const { width, height, margin } = getDimensions({
 	width: d3.min([window.innerWidth * 0.9, window.innerHeight * 0.9]),
-	// height: window.innerHeight * 0.9,
+	height: window.innerHeight * 0.9,
 	margin: {
 		top: 10,
 		right: 10,
@@ -28,6 +28,12 @@ const bounds = container
 // 	${top}px
 // )`)
 
+const zoomCover = container.append("rect")
+	.attr("width", width)
+	.attr("height", height)
+	.style("fill", "none")
+	.style("pointer-events", "all")
+
 // 4. Create scales (for every data-to-physical transformation you need)
 const simulation = d3.forceSimulation()
 	.force("charge", d3.forceManyBody())
@@ -38,18 +44,6 @@ const simulation = d3.forceSimulation()
 
 // 5. Draw data
 
-let node = bounds.selectAll(".node")
-	.data(nodes)
-	.join("g")
-	.attr("class", "node")
-
-let circle = node.append("circle")
-	.attr("r", 2)
-	.attr("fill", "none")
-
-let text = node.append("text")
-	.attr("class", "label")
-
 let link = bounds.selectAll(".link")
 	.data(links)
 	.join("polyline")
@@ -59,6 +53,24 @@ let link = bounds.selectAll(".link")
 	.attr("marker-end", "url(#arrow)")
 	.attr("fill", "none")
 	.attr("class", "link")
+
+let node = bounds.selectAll(".node")
+	.data(nodes)
+	.join("g")
+	.attr("class", "node")
+
+let circle = node.append("circle")
+	.attr("r", 2)
+	.attr("fill", "white")
+
+let text = node.append("text")
+	.attr("class", "label")
+
+
+simulation.on("tick", ticked({ node, circle, link, text }))
+	.force("link")
+	.links(links)
+
 
 // 6. Draw peripherals (axes, labels, legends)
 
@@ -85,9 +97,18 @@ container
 
 // 7. Set up interactions (event listeners)
 
-simulation.on("tick", ticked({ node, circle, link, text }))
-	.force("link")
-	.links(links)
+// Enable Zoom
+const zoom = d3.zoom()
+	.scaleExtent([1 / 3, 6])
+	.on("zoom", ({ transform }) => bounds.attr("transform", transform))
+
+zoomCover
+	.call(zoom)
+	.call(zoom.translateTo, 0, 0);
+
+// const attachZoomControls = d3.zoom()
+// 	.on("zoom", zoomed);
+// attachZoomControls(container); //adding the zoom event handler to the svg container
 
 // Utilities
 

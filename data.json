@@ -1,19 +1,511 @@
 {
 	"nodes": [
 		{
-			"id": "Myriel",
-			"group": 1
+			"id": "Quality"
 		},
 		{
-			"id": "Napoleon",
-			"group": 1
+			"id": "Naming"
+		},
+		{
+			"id": "Security"
+		},
+		{
+			"id": "Cyclomatic Complexity"
+		},
+		{
+			"id": "Modularity"
+		},
+		{
+			"id": "Accessibility"
+		},
+		{
+			"id": "CI"
+		},
+		{
+			"id": "CD"
+		},
+		{
+			"id": "GitHub Actions"
+		},
+		{
+			"id": "Renaming"
+		},
+		{
+			"id": "Refactoring Conditionals"
+		},
+		{
+			"id": "Refactoring Loops"
+		},
+		{
+			"id": "Refactoring Data Types"
+		},
+		{
+			"id": "Refactoring Modules"
+		},
+		{
+			"id": "Data Types"
+		},
+		{
+			"id": "Code Refactoring"
+		},
+		{
+			"id": "Configure TypeScript"
+		},
+		{
+			"id": "Setup TypeScript"
+		},
+		{
+			"id": "TypeScript Simple Types"
+		},
+		{
+			"id": "TypeScript Generic Types"
+		},
+		{
+			"id": "TypeScript Object Types"
+		},
+		{
+			"id": "Progressive Typing"
+		},
+		{
+			"id": "React TypeScript"
+		},
+		{
+			"id": "Progressive React Typing"
+		},
+		{
+			"id": "TypeScript Jest"
+		},
+		{
+			"id": "AXE"
+		},
+		{
+			"id": "JavaScript Performance Testing"
+		},
+		{
+			"id": "React Performance Testing"
+		},
+		{
+			"id": "Browser Performance Testing"
+		},
+		{
+			"id": "Jest Sockets"
+		},
+		{
+			"id": "Jest Time"
+		},
+		{
+			"id": "Configure Jest"
+		},
+		{
+			"id": "Setup Jest"
+		},
+		{
+			"id": "Simple Jest Tests"
+		},
+		{
+			"id": "MSW"
+		},
+		{
+			"id": "Intro to Refactoring"
+		},
+		{
+			"id": "Big O"
+		},
+		{
+			"id": "Jest Mocks"
+		},
+		{
+			"id": "Jest Spies"
+		},
+		{
+			"id": "Jest Hooks"
+		},
+		{
+			"id": "Jest React Components"
+		},
+		{
+			"id": "Jest a11y Testing"
+		},
+		{
+			"id": "Accessibility Testing"
+		},
+		{
+			"id": "Testing Quadrants"
+		},
+		{
+			"id": "Acceptance Testing"
+		},
+		{
+			"id": "Testing Strategy"
+		},
+		{
+			"id": "Types"
+		},
+		{
+			"id": "Quality Evaluation"
+		},
+		{
+			"id": "Storybook Setup"
+		},
+		{
+			"id": "Configuring Storybook"
+		},
+		{
+			"id": "Storybook Stories"
+		},
+		{
+			"id": "Storybook Docs"
+		},
+		{
+			"id": "Storybook Tests"
+		},
+		{
+			"id": "Storybook a11y Testing"
+		},
+		{
+			"id": "Playwright Scraping"
+		},
+		{
+			"id": "Playwright Setup"
+		},
+		{
+			"id": "Configuring Playwright"
+		},
+		{
+			"id": "Playwright Test"
+		},
+		{
+			"id": "Playwright Advanced Assertions"
+		},
+		{
+			"id": "Playwright Advanced Testing"
+		},
+		{
+			"id": "Playwright Running Scripts"
+		},
+		{
+			"id": "Playwright a11y Testing"
+		},
+		{
+			"id": "Documentation"
 		}
 	],
 	"links": [
 		{
-			"source": "Napoleon",
-			"target": "Myriel",
-			"value": 1
+			"source": "Quality",
+			"target": "Naming"
+		},
+		{
+			"source": "Quality",
+			"target": "Documentation"
+		},
+		{
+			"source": "Quality",
+			"target": "Security"
+		},
+		{
+			"source": "Quality",
+			"target": "Modularity"
+		},
+		{
+			"source": "Quality",
+			"target": "Accessibility"
+		},
+		{
+			"source": "Quality",
+			"target": "CI"
+		},
+		{
+			"source": "CI",
+			"target": "CD"
+		},
+		{
+			"source": "CI",
+			"target": "GitHub Actions"
+		},
+		{
+			"source": "Quality",
+			"target": "Intro to Refactoring"
+		},
+		{
+			"source": "Intro to Refactoring",
+			"target": "Renaming"
+		},
+		{
+			"source": "Quality",
+			"target": "Types"
+		},
+		{
+			"source": "Types",
+			"target": "TypeScript Simple Types"
+		},
+		{
+			"source": "Big O",
+			"target": "Refactoring Loops"
+		},
+		{
+			"source": "Big O",
+			"target": "Refactoring Data Types"
+		},
+		{
+			"source": "Types",
+			"target": "TypeScript Simple Types"
+		},
+		{
+			"source": "Setup TypeScript",
+			"target": "Configure TypeScript"
+		},
+		{
+			"source": "TypeScript Simple Types",
+			"target": "React TypeScript"
+		},
+		{
+			"source": "TypeScript Simple Types",
+			"target": "Progressive Typing"
+		},
+		{
+			"source": "Progressive Typing",
+			"target": "Progressive React Typing"
+		},
+		{
+			"source": "Progressive Typing",
+			"target": "TypeScript Jest"
+		},
+		{
+			"source": "Code Refactoring",
+			"target": "Progressive Typing"
+		},
+		{
+			"source": "Data Types",
+			"target": "Refactoring Data Types"
+		},
+		{
+			"source": "Cyclomatic Complexity",
+			"target": "Refactoring Conditionals"
+		},
+		{
+			"source": "Refactoring Conditionals",
+			"target": "Code Refactoring"
+		},
+		{
+			"source": "Setup TypeScript",
+			"target": "TypeScript Simple Types"
+		},
+		{
+			"source": "Playwright Setup",
+			"target": "Playwright Test"
+		},
+		{
+			"source": "Refactoring Loops",
+			"target": "Code Refactoring"
+		},
+		{
+			"source": "Refactoring Data Types",
+			"target": "Code Refactoring"
+		},
+		{
+			"source": "Quality",
+			"target": "Testing Quadrants"
+		},
+		{
+			"source": "Testing Quadrants",
+			"target": "Acceptance Testing"
+		},
+		{
+			"source": "Testing Quadrants",
+			"target": "Testing Strategy"
+		},
+		{
+			"source": "Testing Strategy",
+			"target": "Quality Evaluation"
+		},
+		{
+			"source": "Testing Quadrants",
+			"target": "Simple Jest Tests"
+		},
+		{
+			"source": "Simple Jest Tests",
+			"target": "Jest Spies"
+		},
+		{
+			"source": "Jest Spies",
+			"target": "Jest Mocks"
+		},
+		{
+			"source": "Setup Jest",
+			"target": "Configure Jest"
+		},
+		{
+			"source": "Setup Jest",
+			"target": "Jest Mocks"
+		},
+		{
+			"source": "Jest Mocks",
+			"target": "Jest Sockets"
+		},
+		{
+			"source": "Jest Mocks",
+			"target": "Jest Time"
+		},
+		{
+			"source": "Jest Spies",
+			"target": "MSW"
+		},
+		{
+			"source": "Intro to Refactoring",
+			"target": "React Performance Testing"
+		},
+		{
+			"source": "Jest Spies",
+			"target": "Jest React Components"
+		},
+		{
+			"source": "Jest React Components",
+			"target": "Jest Hooks"
+		},
+		{
+			"source": "Playwright Scraping",
+			"target": "Playwright Test"
+		},
+		{
+			"source": "Playwright Setup",
+			"target": "Configuring Playwright"
+		},
+		{
+			"source": "Playwright Test",
+			"target": "Storybook Tests"
+		},
+		{
+			"source": "Playwright Test",
+			"target": "Playwright Advanced Assertions"
+		},
+		{
+			"source": "Playwright Scraping",
+			"target": "Playwright Running Scripts"
+		},
+		{
+			"source": "Playwright Advanced Testing",
+			"target": "Accessibility Testing"
+		},
+		{
+			"source": "AXE",
+			"target": "Jest a11y Testing"
+		},
+		{
+			"source": "AXE",
+			"target": "Storybook a11y Testing"
+		},
+		{
+			"source": "AXE",
+			"target": "Playwright a11y Testing"
+		},
+		{
+			"source": "Storybook a11y Testing",
+			"target": "Accessibility Testing"
+		},
+		{
+			"source": "Jest a11y Testing",
+			"target": "Accessibility Testing"
+		},
+		{
+			"source": "Storybook Setup",
+			"target": "Configuring Storybook"
+		},
+		{
+			"source": "Jest Spies",
+			"target": "Storybook Tests"
+		},
+		{
+			"source": "Storybook Setup",
+			"target": "Storybook Tests"
+		},
+		{
+			"source": "Storybook Stories",
+			"target": "Storybook Docs"
+		},
+		{
+			"source": "Documentation",
+			"target": "Storybook Docs"
+		},
+		{
+			"source": "Accessibility",
+			"target": "Accessibility Testing"
+		},
+		{
+			"source": "Playwright a11y Testing",
+			"target": "Accessibility Testing"
+		},
+		{
+			"source": "TypeScript Object Types",
+			"target": "TypeScript Generic Types"
+		},
+		{
+			"source": "TypeScript Simple Types",
+			"target": "TypeScript Object Types"
+		},
+		{
+			"source": "JavaScript Performance Testing",
+			"target": "Refactoring Data Types"
+		},
+		{
+			"source": "JavaScript Performance Testing",
+			"target": "Refactoring Loops"
+		},
+		{
+			"source": "Simple Jest Tests",
+			"target": "Refactoring Loops"
+		},
+		{
+			"source": "Simple Jest Tests",
+			"target": "Refactoring Conditionals"
+		},
+		{
+			"source": "Simple Jest Tests",
+			"target": "Refactoring Data Types"
+		},
+		{
+			"source": "Configure TypeScript",
+			"target": "React TypeScript"
+		},
+		{
+			"source": "Playwright Advanced Assertions",
+			"target": "Playwright Advanced Testing"
+		},
+		{
+			"source": "Configuring Playwright",
+			"target": "Browser Performance Testing"
+		},
+		{
+			"source": "Playwright Test",
+			"target": "Browser Performance Testing"
+		},
+		{
+			"source": "Intro to Refactoring",
+			"target": "Renaming"
+		},
+		{
+			"source": "Renaming",
+			"target": "Code Refactoring"
+		},
+		{
+			"source": "Naming",
+			"target": "Renaming"
+		},
+		{
+			"source": "Quality",
+			"target": "Documentation"
+		},
+		{
+			"source": "Modularity",
+			"target": "Refactoring Modules"
+		},
+		{
+			"source": "Refactoring Modules",
+			"target": "Code Refactoring"
+		},
+		{
+			"source": "Jest Spies",
+			"target": "Storybook Stories"
 		}
 	]
 }
