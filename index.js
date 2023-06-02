@@ -36,7 +36,9 @@ const zoomCover = container.append("rect")
 
 // 4. Create scales (for every data-to-physical transformation you need)
 const simulation = d3.forceSimulation()
-	.force("charge", d3.forceManyBody())
+
+// Attach forces
+simulation.force("charge", d3.forceManyBody())
 	.force("link", d3.forceLink().id(d => d.id))
 	.force("x", d3.forceX(50))
 	.force("y", d3.forceY(50))
