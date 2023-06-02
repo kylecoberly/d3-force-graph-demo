@@ -1,193 +1,256 @@
 {
 	"nodes": [
 		{
-			"id": "Quality"
+			"id": "Quality",
+			"group": "quality"
 		},
 		{
-			"id": "Naming"
+			"id": "Naming",
+			"group": "quality"
 		},
 		{
-			"id": "Security"
+			"id": "Security",
+			"group": "quality"
 		},
 		{
-			"id": "Cyclomatic Complexity"
+			"id": "Cyclomatic Complexity",
+			"group": "quality"
 		},
 		{
-			"id": "Modularity"
+			"id": "Modularity",
+			"group": "quality"
 		},
 		{
-			"id": "Accessibility"
+			"id": "Accessibility",
+			"group": "quality"
 		},
 		{
-			"id": "CI"
+			"id": "CI",
+			"group": "quality"
 		},
 		{
-			"id": "CD"
+			"id": "CD",
+			"group": "quality"
 		},
 		{
-			"id": "GitHub Actions"
+			"id": "GitHub Actions",
+			"group": "quality"
 		},
 		{
-			"id": "Renaming"
+			"id": "Renaming",
+			"group": "quality"
 		},
 		{
-			"id": "Refactoring Conditionals"
+			"id": "Refactoring Conditionals",
+			"group": "quality"
 		},
 		{
-			"id": "Refactoring Loops"
+			"id": "Refactoring Loops",
+			"group": "quality"
 		},
 		{
-			"id": "Refactoring Data Types"
+			"id": "Refactoring Data Types",
+			"group": "quality"
 		},
 		{
-			"id": "Refactoring Modules"
+			"id": "Refactoring Modules",
+			"group": "quality"
 		},
 		{
-			"id": "Data Types"
+			"id": "Data Types",
+			"group": "quality"
 		},
 		{
-			"id": "Code Refactoring"
+			"id": "Code Refactoring",
+			"group": "quality"
 		},
 		{
-			"id": "Configure TypeScript"
+			"id": "Configure TypeScript",
+			"group": "typescript"
 		},
 		{
-			"id": "Setup TypeScript"
+			"id": "Setup TypeScript",
+			"group": "typescript"
 		},
 		{
-			"id": "TypeScript Simple Types"
+			"id": "TypeScript Simple Types",
+			"group": "typescript"
 		},
 		{
-			"id": "TypeScript Generic Types"
+			"id": "TypeScript Generic Types",
+			"group": "typescript"
 		},
 		{
-			"id": "TypeScript Object Types"
+			"id": "TypeScript Object Types",
+			"group": "typescript"
 		},
 		{
-			"id": "Progressive Typing"
+			"id": "Progressive Typing",
+			"group": "typescript"
 		},
 		{
-			"id": "React TypeScript"
+			"id": "React TypeScript",
+			"group": "typescript"
 		},
 		{
-			"id": "Progressive React Typing"
+			"id": "Progressive React Typing",
+			"group": "typescript"
 		},
 		{
-			"id": "TypeScript Jest"
+			"id": "TypeScript Jest",
+			"group": "typescript"
 		},
 		{
-			"id": "AXE"
+			"id": "AXE",
+			"group": "quality"
 		},
 		{
-			"id": "JavaScript Performance Testing"
+			"id": "JavaScript Performance Testing",
+			"group": "jest"
 		},
 		{
-			"id": "React Performance Testing"
+			"id": "React Performance Testing",
+			"group": "browser testing"
 		},
 		{
-			"id": "Browser Performance Testing"
+			"id": "Browser Performance Testing",
+			"group": "browser testing"
 		},
 		{
-			"id": "Jest Sockets"
+			"id": "Jest Sockets",
+			"group": "jest"
 		},
 		{
-			"id": "Jest Time"
+			"id": "Jest Time",
+			"group": "jest"
 		},
 		{
-			"id": "Configure Jest"
+			"id": "Configure Jest",
+			"group": "jest"
 		},
 		{
-			"id": "Setup Jest"
+			"id": "Setup Jest",
+			"group": "jest"
 		},
 		{
-			"id": "Simple Jest Tests"
+			"id": "Simple Jest Tests",
+			"group": "jest"
 		},
 		{
-			"id": "MSW"
+			"id": "MSW",
+			"group": "jest"
 		},
 		{
-			"id": "Intro to Refactoring"
+			"id": "Intro to Refactoring",
+			"group": "quality"
 		},
 		{
-			"id": "Big O"
+			"id": "Big O",
+			"group": "quality"
 		},
 		{
-			"id": "Jest Mocks"
+			"id": "Jest Mocks",
+			"group": "jest"
 		},
 		{
-			"id": "Jest Spies"
+			"id": "Jest Spies",
+			"group": "jest"
 		},
 		{
-			"id": "Jest Hooks"
+			"id": "Jest Hooks",
+			"group": "jest"
 		},
 		{
-			"id": "Jest React Components"
+			"id": "Jest React Components",
+			"group": "jest"
 		},
 		{
-			"id": "Jest a11y Testing"
+			"id": "Jest a11y Testing",
+			"group": "jest"
 		},
 		{
-			"id": "Accessibility Testing"
+			"id": "Accessibility Testing",
+			"group": "quality"
 		},
 		{
-			"id": "Testing Quadrants"
+			"id": "Testing Quadrants",
+			"group": "quality"
 		},
 		{
-			"id": "Acceptance Testing"
+			"id": "Acceptance Testing",
+			"group": "quality"
 		},
 		{
-			"id": "Testing Strategy"
+			"id": "Testing Strategy",
+			"group": "quality"
 		},
 		{
-			"id": "Types"
+			"id": "Types",
+			"group": "typescript"
 		},
 		{
-			"id": "Quality Evaluation"
+			"id": "Quality Evaluation",
+			"group": "quality"
 		},
 		{
-			"id": "Storybook Setup"
+			"id": "Storybook Setup",
+			"group": "storybook"
 		},
 		{
-			"id": "Configuring Storybook"
+			"id": "Configuring Storybook",
+			"group": "storybook"
 		},
 		{
-			"id": "Storybook Stories"
+			"id": "Storybook Stories",
+			"group": "storybook"
 		},
 		{
-			"id": "Storybook Docs"
+			"id": "Storybook Docs",
+			"group": "storybook"
 		},
 		{
-			"id": "Storybook Tests"
+			"id": "Storybook Tests",
+			"group": "storybook"
 		},
 		{
-			"id": "Storybook a11y Testing"
+			"id": "Storybook a11y Testing",
+			"group": "storybook"
 		},
 		{
-			"id": "Playwright Scraping"
+			"id": "Playwright Scraping",
+			"group": "playwright"
 		},
 		{
-			"id": "Playwright Setup"
+			"id": "Playwright Setup",
+			"group": "playwright"
 		},
 		{
-			"id": "Configuring Playwright"
+			"id": "Configuring Playwright",
+			"group": "playwright"
 		},
 		{
-			"id": "Playwright Test"
+			"id": "Playwright Test",
+			"group": "playwright"
 		},
 		{
-			"id": "Playwright Advanced Assertions"
+			"id": "Playwright Advanced Assertions",
+			"group": "playwright"
 		},
 		{
-			"id": "Playwright Advanced Testing"
+			"id": "Playwright Advanced Testing",
+			"group": "playwright"
 		},
 		{
-			"id": "Playwright Running Scripts"
+			"id": "Playwright Running Scripts",
+			"group": "playwright"
 		},
 		{
-			"id": "Playwright a11y Testing"
+			"id": "Playwright a11y Testing",
+			"group": "playwright"
 		},
 		{
-			"id": "Documentation"
+			"id": "Documentation",
+			"group": "quality"
 		}
 	],
 	"links": [
