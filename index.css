@@ -1,9 +1,19 @@
-.node {
-	stroke: #000;
-	stroke-width: 1px;
+.node circle {
+	stroke: #999;
+	stroke-width: 0.01em;
 }
 
 .link {
-	stroke: #999;
+	stroke: #ccc;
+	stroke-width: 0.5px;
+}
+
+.node text {
+	fill: #333;
+	font-size: 0.1em;
 	stroke-width: 1px;
+}
+
+.arrow {
+	fill: #666;
 }
