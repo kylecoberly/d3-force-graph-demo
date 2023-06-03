@@ -1,13 +1,21 @@
-import { forceManyBody, forceLink } from "d3"
+import { forceManyBody, forceLink, forceCollide } from "d3"
 
-export default function shapeLinks(simulation, alpha) {
-	if (alpha < 0.2) {
-		simulation.force("charge", forceManyBody()
-			.strength(-20)
-		).force("link", forceLink()
-			.id(d => d.id)
-			.distance(3)
-			.strength(1)
-		)
+export default function shapeLinks(
+	simulation,
+	alpha,
+	{
+		alphaCutoff, chargeStrength, linkDistance,
+		collisionStrength, linkStrength,
+	}
+) {
+	if (alpha < alphaCutoff) {
+		simulation
+			.force("charge", forceManyBody()
+				.strength(chargeStrength)
+			).force("link", forceLink()
+				.id(d => d.id)
+				.distance(linkDistance)
+				.strength(linkStrength)
+			).force("collision", forceCollide(collisionStrength))
 	}
 }

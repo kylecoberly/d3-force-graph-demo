@@ -37,8 +37,8 @@ function addArrow(container) {
 		.attr("viewBox", [0, 0, 10, 10])
 		.attr("refX", 5)
 		.attr("refY", 5)
-		.attr("markerWidth", 3)
-		.attr("markerHeight", 3)
+		.attr("markerWidth", 7)
+		.attr("markerHeight", 7)
 		.attr("orient", "auto")
 		.attr("class", "arrow")
 		.append("path")
@@ -74,5 +74,5 @@ function zoomed({ transform }) {
 }
 
 container.call(zoom()
-	.scaleExtent([1 / 3, 3])
+	.scaleExtent([1 / 2, 3])
 	.on("zoom", zoomed))
