@@ -1,34 +1,13 @@
 import * as d3 from "d3"
 import simulation from "./simulation"
+import getCentroids from "./centroids"
+
 
 export function ticked({ circle, link, text }) {
 	return () => {
 		const nodes = simulation.nodes()
 
-		const groupCoordinates = nodes.reduce((groupCoordinates, node) => {
-			// Initialize
-			groupCoordinates[node.group] = groupCoordinates[node.group] || []
-			groupCoordinates[node.group].push([node.x, node.y])
-			return groupCoordinates
-		}, {})
-
-		const centroids = Object.entries(groupCoordinates).reduce((centroids, [group, coordinates]) => {
-			const count = coordinates.length;
-			let tx = 0;
-			let ty = 0;
-
-			coordinates.forEach(([x, y]) => {
-				tx += x;
-				ty += y;
-			})
-
-			const cx = tx / count;
-			const cy = ty / count;
-
-			centroids[group] = { x: cx, y: cy }
-
-			return centroids
-		}, {})
+		const centroids = getCentroids(nodes)
 
 		// don't modify points close the the group centroid:
 		let minDistance = 3;
