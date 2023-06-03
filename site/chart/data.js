@@ -1,5 +1,7 @@
-import { nodes, links } from "./data"
-import { bounds } from "./chart"
+import data from "../data.json"
+import { bounds } from "./chart.js"
+
+export const { nodes, links } = data
 
 export const link = bounds.selectAll(".link")
 	.data(links)
@@ -22,3 +24,11 @@ export const circle = node.append("circle")
 
 export const text = node.append("text")
 	.attr("class", "label")
+
+export const linkCounts = links.reduce((counts, link) => {
+	counts[link.source] = counts[link.source] ?? { from: 0, to: 0 }
+	counts[link.target] = counts[link.target] ?? { from: 0, to: 0 }
+	counts[link.source].from = counts[link.source].from + 1
+	counts[link.target].to = counts[link.target].to + 1
+	return counts
+}, {})

@@ -1,10 +1,10 @@
-import simulation from "./simulation"
-import clampToBoundary from "./clamp"
-import getLinkLine from "./link-line"
-import attractGroups from "./attract-groups"
-import shapeLinks from "./shape-links"
+import simulation from "./simulation.js"
+import clampToBoundary from "./rendering/clamp.js"
+import getLinkLine from "./rendering/link-line.js"
+import attractGroups from "./rendering/attract-groups.js"
+import shapeLinks from "./rendering/shape-links.js"
 
-export function ticked({ circle, link, text }) {
+export default function ticked({ circle, link, text }) {
 	return () => {
 		const nodes = simulation.nodes()
 		const alpha = simulation.alpha()

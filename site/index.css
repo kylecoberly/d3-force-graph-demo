@@ -1,3 +1,7 @@
+* {
+	box-sizing: border-box;
+}
+
 .node circle {
 	stroke: #999;
 	stroke-width: 0.01em;
@@ -16,4 +20,15 @@
 
 .arrow {
 	fill: #666;
+}
+
+svg {
+	border: 1px solid red;
+	width: 80%;
+	max-height: 800px;
+}
+
+
+.bounds {
+	border: 1px solid blue;
 }
