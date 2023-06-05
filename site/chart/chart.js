@@ -1,4 +1,4 @@
-import { select, zoom, zoomIdentity } from "d3"
+import { select, zoom } from "d3"
 import simulation from "./simulation.js"
 
 // Canvas
@@ -73,6 +73,6 @@ function zoomed({ transform }) {
 	bounds.attr("transform", transform)
 }
 
-container.call(zoom()
-	.scaleExtent([1 / 2, 3])
-	.on("zoom", zoomed))
+export const zoomer = zoom().scaleExtent([1 / 2, 3])
+
+container.call(zoomer.on("zoom", zoomed))

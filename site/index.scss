@@ -1,0 +1,142 @@
+$black: hsl(0, 0%, 5%);
+$white: hsl(0, 0%, 100%);
+
+$primary-1: #285a5f;
+$primary-2: #317d89;
+$primary-3: #3691a1;
+$primary-4: #3ca6bb;
+$primary-5: #41b5cd;
+$primary-6: #49c0d6;
+$primary-7: #5ecbde;
+$primary-8: #87dae9;
+$primary-9: #b5e9f1;
+$primary-10: #e1f6fa;
+
+$success-1: #185739;
+$success-2: #247353;
+$success-3: #2b8361;
+$success-4: #31936f;
+$success-5: #36a17c;
+$success-6: #47b08d;
+$success-7: #62bfa0;
+$success-8: #8cd1ba;
+$success-9: #b8e3d5;
+$success-10: #e2f4ef;
+
+$warning-1: #FF6F00;
+$warning-2: #FF8F00;
+$warning-3: #FFA000;
+$warning-4: #FFB300;
+$warning-5: #FFC107;
+$warning-6: #FFCA28;
+$warning-7: #FFD54F;
+$warning-8: #FFE082;
+$warning-9: #FFECB3;
+$warning-10: #FFF8E1;
+
+$failure-1: #a14636;
+$failure-2: #b24d3e;
+$failure-3: #c05244;
+$failure-4: #d25b4a;
+$failure-5: #e0634c;
+$failure-6: #dd6c60;
+$failure-7: #d5847f;
+$failure-8: #e2a4a2;
+$failure-9: #f7d3d5;
+$failure-10: #fbedef;
+
+$grey-1: #263238;
+$grey-2: #37474F;
+$grey-3: #455A64;
+$grey-4: #546E7A;
+$grey-5: #607D8B;
+$grey-6: #78909C;
+$grey-7: #90A4AE;
+$grey-8: #B0BEC5;
+$grey-9: #CFD8DC;
+$grey-10: #ECEFF1;
+
+@font-face {
+  font-family: "Gill Sans";
+  src: url("./gs.woff") format("woff");
+}
+@font-face {
+  font-family: "Gill Sans Condensed";
+  src: url("./gsc.woff") format("woff");
+}
+
+body {
+  font-family: "Gill Sans", sans-serif;
+  color: $grey-1;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  @media (max-width: 500px){
+    font-size: 12px;
+  }
+}
+
+* {
+	box-sizing: border-box;
+}
+
+.link {
+	stroke: #ccc;
+	stroke-width: 0.1px; }
+
+.node text {
+	fill: #333;
+	font-size: 0.1em;
+	stroke-width: 1px;
+}
+
+.node {
+	cursor: pointer;
+}
+
+.arrow {
+	fill: #999;
+}
+
+svg {
+	border: 1px solid red;
+	width: 80%;
+	max-height: 800px;
+}
+
+
+.bounds {
+	border: 1px solid blue;
+}
+
+.closed {
+	stroke: $grey-8;
+	stroke-width: 0.03em;
+	fill: $grey-8;
+}
+
+.open {
+	stroke: $success-7;
+	stroke-width: 0.03em;
+	fill: $success-7;
+}
+
+.in-progress {
+	stroke: $warning-6;
+	stroke-width: 0.03em;
+	fill: $warning-6;
+}
+
+.completed {
+	stroke: $primary-5;
+	stroke-width: 0.03em;
+	fill: $primary-5;
+}
+
+.critical {
+	stroke-width: 0;
+}
+
+circle:not(.critical) {
+	fill: $white;
+}

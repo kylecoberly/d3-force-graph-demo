@@ -2,11 +2,15 @@
 	"nodes": [
 		{
 			"id": "Quality",
-			"group": "quality"
+			"group": "quality",
+			"critical": true,
+			"complete": true
 		},
 		{
 			"id": "Naming",
-			"group": "quality"
+			"group": "quality",
+			"critical": true,
+			"complete": true
 		},
 		{
 			"id": "Security",
@@ -14,7 +18,9 @@
 		},
 		{
 			"id": "Cyclomatic Complexity",
-			"group": "quality"
+			"group": "quality",
+			"critical": true,
+			"complete": true
 		},
 		{
 			"id": "Modularity",
@@ -22,7 +28,8 @@
 		},
 		{
 			"id": "Accessibility",
-			"group": "quality"
+			"group": "quality",
+			"critical": true
 		},
 		{
 			"id": "CI",
@@ -38,31 +45,39 @@
 		},
 		{
 			"id": "Renaming",
-			"group": "quality"
+			"group": "quality",
+			"critical": true,
+			"in_progress": true
 		},
 		{
 			"id": "Refactoring Conditionals",
-			"group": "quality"
+			"group": "quality",
+			"critical": true
 		},
 		{
 			"id": "Refactoring Loops",
-			"group": "quality"
+			"group": "quality",
+			"critical": true
 		},
 		{
 			"id": "Refactoring Data Types",
-			"group": "quality"
+			"group": "quality",
+			"critical": true
 		},
 		{
 			"id": "Refactoring Modules",
-			"group": "quality"
+			"group": "quality",
+			"critical": true
 		},
 		{
 			"id": "Data Types",
-			"group": "quality"
+			"group": "quality",
+			"critical": true
 		},
 		{
 			"id": "Code Refactoring",
-			"group": "quality"
+			"group": "quality",
+			"critical": true
 		},
 		{
 			"id": "Configure TypeScript",
@@ -70,11 +85,13 @@
 		},
 		{
 			"id": "Setup TypeScript",
-			"group": "typescript"
+			"group": "typescript",
+			"in_progress": true
 		},
 		{
 			"id": "TypeScript Simple Types",
-			"group": "typescript"
+			"group": "typescript",
+			"in_progress": true
 		},
 		{
 			"id": "TypeScript Generic Types",
@@ -106,7 +123,8 @@
 		},
 		{
 			"id": "JavaScript Performance Testing",
-			"group": "jest"
+			"group": "jest",
+			"critical": true
 		},
 		{
 			"id": "React Performance Testing",
@@ -130,11 +148,13 @@
 		},
 		{
 			"id": "Setup Jest",
-			"group": "jest"
+			"group": "jest",
+			"critical": true
 		},
 		{
 			"id": "Simple Jest Tests",
-			"group": "jest"
+			"group": "jest",
+			"critical": true
 		},
 		{
 			"id": "MSW",
@@ -142,7 +162,8 @@
 		},
 		{
 			"id": "Intro to Refactoring",
-			"group": "quality"
+			"group": "quality",
+			"critical": true
 		},
 		{
 			"id": "Big O",
@@ -150,11 +171,13 @@
 		},
 		{
 			"id": "Jest Mocks",
-			"group": "jest"
+			"group": "jest",
+			"critical": true
 		},
 		{
 			"id": "Jest Spies",
-			"group": "jest"
+			"group": "jest",
+			"critical": true
 		},
 		{
 			"id": "Jest Hooks",
@@ -174,7 +197,8 @@
 		},
 		{
 			"id": "Testing Quadrants",
-			"group": "quality"
+			"group": "quality",
+			"critical": true
 		},
 		{
 			"id": "Acceptance Testing",
@@ -186,11 +210,13 @@
 		},
 		{
 			"id": "Types",
-			"group": "typescript"
+			"group": "typescript",
+			"critical": true
 		},
 		{
 			"id": "Quality Evaluation",
-			"group": "quality"
+			"group": "quality",
+			"critical": true
 		},
 		{
 			"id": "Storybook Setup",
@@ -210,7 +236,8 @@
 		},
 		{
 			"id": "Storybook Tests",
-			"group": "storybook"
+			"group": "storybook",
+			"critical": true
 		},
 		{
 			"id": "Storybook a11y Testing",
@@ -218,11 +245,13 @@
 		},
 		{
 			"id": "Playwright Scraping",
-			"group": "playwright"
+			"group": "playwright",
+			"critical": true
 		},
 		{
 			"id": "Playwright Setup",
-			"group": "playwright"
+			"group": "playwright",
+			"critical": true
 		},
 		{
 			"id": "Configuring Playwright",
@@ -230,7 +259,8 @@
 		},
 		{
 			"id": "Playwright Test",
-			"group": "playwright"
+			"group": "playwright",
+			"critical": true
 		},
 		{
 			"id": "Playwright Advanced Assertions",
@@ -250,7 +280,8 @@
 		},
 		{
 			"id": "Documentation",
-			"group": "quality"
+			"group": "quality",
+			"critical": true
 		}
 	],
 	"links": [

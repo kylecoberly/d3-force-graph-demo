@@ -6,11 +6,9 @@ export const { nodes, links } = data
 export const link = bounds.selectAll(".link")
 	.data(links)
 	.join("polyline")
-	.attr("stroke", "black")
 	.attr("marker-mid", "url(#arrow)")
 	.attr("marker-end", "url(#arrow)")
-	.attr("fill", "none")
-	.attr("class", "link")
+	.classed("link", true)
 
 export const node = bounds.selectAll(".node")
 	.data(nodes)
@@ -19,7 +17,6 @@ export const node = bounds.selectAll(".node")
 
 export const circle = node.append("circle")
 	.attr("r", 2)
-	.attr("fill", "white")
 
 export const text = node.append("text")
 	.attr("class", "label")
