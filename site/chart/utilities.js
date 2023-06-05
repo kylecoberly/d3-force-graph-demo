@@ -31,13 +31,26 @@ export function getGroupCoordinates(nodes) {
 }
 
 export function getDistance({ x: x1, y: y1 }, { x: x2, y: y2 }) {
-	positionDifferential = {
-		x: x1 - x2,
-		y: y1 - y2,
+	const positionDifferential = {
+		x: x1 > x2 ? x1 - x2 : x2 - x1,
+		y: y1 > y2 ? y1 - y2 : y2 - y1,
 	}
 
 	return Math.sqrt(
 		positionDifferential.x ** 2
 		+ positionDifferential.y ** 2
 	)
+}
+
+export function getSine(nodeRadius, { target, source }) {
+	const angle = Math.atan2(target.y - source.y, target.x - source.x)
+	const cosine = Math.cos(angle) * nodeRadius
+	const sine = Math.sin(angle) * nodeRadius
+
+	return { sine, cosine }
+}
+
+export function getSegmentCount(segmentLength, { source, target }) {
+	const distance = getDistance(source, target)
+	return Math.ceil(distance / segmentLength)
 }

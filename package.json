@@ -2,14 +2,17 @@
 	"name": "graph-demo",
 	"version": "1.0.0",
 	"description": "",
+	"type": "module",
 	"scripts": {
-		"start": "npx parcel -p 3000 site/index.html"
+		"start": "npx parcel -p 3000 site/index.html",
+		"test": "NODE_OPTIONS=--experimental-vm-modules npx jest --watchAll"
 	},
 	"keywords": [],
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
-		"d3": "^7.8.4"
+		"d3": "^7.8.4",
+		"jest": "^29.5.0"
 	},
 	"devDependencies": {
 		"@parcel/transformer-sass": "^2.8.0"

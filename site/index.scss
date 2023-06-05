@@ -82,7 +82,9 @@ body {
 
 .link {
 	stroke: #ccc;
-	stroke-width: 0.1px; }
+	stroke-width: 0.1px;
+	fill: none;
+}
 
 .node text {
 	fill: #333;

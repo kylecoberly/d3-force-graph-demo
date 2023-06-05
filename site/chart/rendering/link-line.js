@@ -1,41 +1,60 @@
-import { getDistance } from "../utilities"
+import { getSine, getSegmentCount } from "../utilities"
 
 export default function getLinkLine({ source, target }) {
-	const radius = 4
-	const angle = Math.atan2(target.y - source.y, target.x - source.x)
-	const cosine = Math.cos(angle) * radius
-	const sine = Math.sin(angle) * radius
+	const { sine, cosine } = getSine(4, { target, source })
+	const segmentCount = getSegmentCount(10, { source, target })
+	console.log("sc", segmentCount)
 
-	const distance = getDistance(source, target)
 
-	const segmentLength = 10
-	const segmentCount = Math.floor(distance / segmentLength)
-
-	// const segments = generateMidPoints({ source, target }, segmentCount)
+	const segments = generateMidPoints(segmentCount - 1, { source, target })
+	console.log("se", segments)
 
 	return [
 		source.x + cosine, source.y + sine,
-		// ...segments,
-		...generateMidPoint({ source, target }, 2),
+		// source.x, source.y,
+		...segments,
+		// ...getMidPoint(2, { source, target }),
+		// target.x, target.y
 		target.x - cosine, target.y - sine,
 	]
 }
 
-// function generateMidPoints({ source, target }, count) {
-// 	const midPoints = []
-//
-// 	const [x, y] = generateMidPoint({ source, target }, count)
-//
-// 	for (let segment = 1; segment < count; segment++) {
-// 		midPoints.push(x * segment, y)
-// 	}
-//
-// 	return midPoints
-// }
+export function generateMidPoints(count, { source, target }) {
+	const midPoints = []
+	if (count % 2 === 0) count--
 
-function generateMidPoint({ source, target }, proportion) {
+	for (let proportion = 2; count > 0; proportion += 2, count -= 2) {
+		if (count % 2 !== 0) {
+			// Pivot value
+			midPoints.push(...getMidPoint(proportion, { source, target }))
+			// Since 2 will be taken off at increment
+			count++
+			continue
+		}
+		const [x1, y1] = getMidPoint(proportion, { source, target })
+		const [x2, y2] = [
+			target.x === source.x
+				? target.x
+				: target.x > source.x
+					? source.x + (Math.abs(x1) * 3)
+					: source.x - x1,
+			target.y === source.y
+				? target.y
+				: target.y > source.y
+					? source.y + (Math.abs(y1) * 3)
+					: source.y - y1,
+		]
+
+		midPoints.unshift(x1, y1)
+		midPoints.push(x2, y2)
+	}
+
+	return midPoints
+}
+
+export function getMidPoint(proportion, { source, target }) {
 	return [
-		(source.x / proportion) + (target.x / proportion),
-		(source.y / proportion) + (target.y / proportion),
+		((target.x - source.x) * (1 / proportion)) + source.x,
+		((target.y - source.y) * (1 / proportion)) + source.y,
 	]
 }
