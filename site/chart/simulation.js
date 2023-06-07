@@ -4,7 +4,6 @@ import {
 	interpolateZoom,
 } from "d3"
 import { nodes, links, link, circle, text, linkCounts } from "./data.js"
-import simulation from "./simulation.js"
 import clampToBoundary from "./rendering/clamp.js"
 import getLinkLine from "./rendering/link-line.js"
 import attractGroups from "./rendering/attract-groups.js"
@@ -71,15 +70,19 @@ const linkForce = forceLink()
 			: linkStrength.initial
 	))
 
-export default simulation = forceSimulation()
-	.nodes(nodes)
-	.force("charge", chargeForce)
-	.force("x", xForce)
-	.force("y", yForce)
-	.force("collision", collisionForce)
-	.force("link", linkForce.links(links))
-	.stop()
+export function runSimulation({ nodes, links }) {
+	return forceSimulation()
+		.nodes(nodes)
+		.force("charge", chargeForce)
+		.force("x", xForce)
+		.force("y", yForce)
+		.force("collision", collisionForce)
+		.force("link", linkForce.links(links))
+		.stop()
+}
 
+
+const simulation = runSimulation({ nodes, links })
 let count = 300
 while (count > 0) {
 	simulation.tick()
@@ -87,6 +90,7 @@ while (count > 0) {
 	count--
 }
 render({ circle, link, text })
+export default simulation
 
 function ticked() {
 	const nodes = simulation.nodes()
@@ -108,7 +112,7 @@ function ticked() {
 	})
 }
 
-function render({ circle, link, text }) {
+export function render({ circle, link, text }) {
 	circle
 		.attr("cx", d => d.x)
 		.attr("cy", d => d.y)

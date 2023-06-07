@@ -1,7 +1,31 @@
-import data from "../data.json"
+// import data from "../data.json"
 import { bounds } from "./chart.js"
 
-export const { nodes, links } = data
+// export const { nodes, links } = data
+
+const tempData = {
+	"nodes": [
+		{
+			"id": "Quality",
+			"group": "quality",
+			"critical": true,
+			"complete": true
+		},
+		{
+			"id": "Naming",
+			"group": "quality",
+			"critical": true,
+			"complete": true
+		},
+	],
+	"links": [
+		{
+			"source": "Quality",
+			"target": "Naming"
+		},
+	],
+}
+export const { nodes, links } = tempData
 
 export const link = bounds.selectAll(".link")
 	.data(links)

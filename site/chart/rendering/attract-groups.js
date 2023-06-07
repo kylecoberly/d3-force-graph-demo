@@ -8,11 +8,11 @@ export default function attractGroups(nodes, alpha, {
 }) {
 	const centroids = getCentroids(nodes)
 	nodes.forEach(d => {
-		groupCenter = {
+		const groupCenter = {
 			x: centroids[d.group].x,
 			y: centroids[d.group].y,
 		}
-		nodePosition = {
+		const nodePosition = {
 			x: d.x,
 			y: d.y,
 		}

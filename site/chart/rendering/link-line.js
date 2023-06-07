@@ -2,20 +2,28 @@ import { getSine, getSegmentCount } from "../utilities"
 
 export default function getLinkLine({ source, target }) {
 	const { sine, cosine } = getSine(4, { target, source })
+	source = {
+		...source,
+		x: source.x + cosine,
+		y: source.y + sine,
+	}
+	target = {
+		...target,
+		x: target.x - cosine,
+		y: target.y - sine,
+	}
+
 	const segmentCount = getSegmentCount(10, { source, target })
-	console.log("sc", segmentCount)
-
-
 	const segments = generateMidPoints(segmentCount - 1, { source, target })
-	console.log("se", segments)
+	// const segments = generateMidPoints(1, { source, target })
 
 	return [
-		source.x + cosine, source.y + sine,
+		source.x, source.y,
 		// source.x, source.y,
 		...segments,
 		// ...getMidPoint(2, { source, target }),
 		// target.x, target.y
-		target.x - cosine, target.y - sine,
+		target.x, target.y,
 	]
 }
 
