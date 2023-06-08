@@ -81,7 +81,6 @@ export function runSimulation({ nodes, links }) {
 		.stop()
 }
 
-
 const simulation = runSimulation({ nodes, links })
 let count = 300
 while (count > 0) {
@@ -90,6 +89,7 @@ while (count > 0) {
 	count--
 }
 render({ circle, link, text })
+
 export default simulation
 
 function ticked() {

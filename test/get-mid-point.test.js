@@ -1,4 +1,4 @@
-import { getMidPoint } from "../site/chart/rendering/link-line.js"
+import { getMidPoint } from "../site/chart/utilities.js"
 
 test("#getMidPoint simple forward hypotenuse, halfway", () => {
 	const proportion = 2

@@ -1,4 +1,4 @@
-import { generateMidPoints } from "../site/chart/rendering/link-line.js"
+import { generateMidPoints } from "../site/chart/utilities.js"
 
 describe("#generateMidPoints", () => {
 	test("1 point, positive, up/right", () => {
@@ -17,52 +17,20 @@ describe("#generateMidPoints", () => {
 		expect(midPoints).toEqual([4, 4])
 	})
 
-	test("1 point, positive, upright", () => {
+	test("1 point, positive, up/left", () => {
 		const count = 1
 		const source = {
-			x: 6,
-			y: 6,
+			x: 5,
+			y: 3,
 		}
 		const target = {
-			x: 10,
-			y: 10,
+			x: 3,
+			y: 5,
 		}
 
 		const midPoints = generateMidPoints(count, { source, target })
 
-		expect(midPoints).toEqual([8, 8])
-	})
-
-	test("1 point, postive, up", () => {
-		const count = 1
-		const source = {
-			x: 10,
-			y: 6,
-		}
-		const target = {
-			x: 10,
-			y: 10,
-		}
-
-		const midPoints = generateMidPoints(count, { source, target })
-
-		expect(midPoints).toEqual([10, 8])
-	})
-
-	test("3 points, positive, right", () => {
-		const count = 3
-		const source = {
-			x: 0,
-			y: 8,
-		}
-		const target = {
-			x: 8,
-			y: 8,
-		}
-
-		const midPoints = generateMidPoints(count, { source, target })
-
-		expect(midPoints).toEqual([2, 8, 4, 8, 6, 8])
+		expect(midPoints).toEqual([4, 4])
 	})
 
 	test("3 points, positive, up/right", () => {
@@ -81,10 +49,10 @@ describe("#generateMidPoints", () => {
 		expect(midPoints).toEqual([0, 3.75, 0, 7.5, 0, 11.25])
 	})
 
-	test("3 points, positive, down", () => {
+	test("3 points, positive, down/left", () => {
 		const count = 3
 		const source = {
-			x: 0,
+			x: 15,
 			y: 15,
 		}
 		const target = {
@@ -94,7 +62,7 @@ describe("#generateMidPoints", () => {
 
 		const midPoints = generateMidPoints(count, { source, target })
 
-		expect(midPoints).toEqual([0, 11.25, 0, 7.5, 0, 3.75])
+		expect(midPoints).toEqual([11.25, 11.25, 7.5, 7.5, 3.75, 3.75])
 	})
 
 	test("4 points, postive, down", () => {
@@ -143,5 +111,37 @@ describe("#generateMidPoints", () => {
 		const midPoints = generateMidPoints(count, { source, target })
 
 		expect(midPoints).toEqual([-2, -2, 0, 0, 2, 2])
+	})
+
+	test("3 points, cross-origin, left", () => {
+		const count = 3
+		const source = {
+			x: 8,
+			y: 0,
+		}
+		const target = {
+			x: -7,
+			y: 0,
+		}
+
+		const midPoints = generateMidPoints(count, { source, target })
+
+		expect(midPoints).toEqual([4.25, 0, 0.5, 0, -3.25, 0])
+	})
+
+	test("3 points, cross-origin, left", () => {
+		const count = 3
+		const source = {
+			x: 0.44,
+			y: -5.94,
+		}
+		const target = {
+			x: -11,
+			y: 3.3,
+		}
+
+		const midPoints = generateMidPoints(count, { source, target })
+
+		expect(midPoints).toEqual([4.25, 0, 0.5, 0, -3.25, 0])
 	})
 })

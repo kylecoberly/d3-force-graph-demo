@@ -1,4 +1,3 @@
-import { generateMidPoints, getMidPoint } from "../site/chart/rendering/link-line.js"
 import { getDistance } from "../site/chart/utilities.js"
 
 test("#getDistance no movement", () => {
