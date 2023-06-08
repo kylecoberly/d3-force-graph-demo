@@ -30,7 +30,7 @@ export const bounds = container
 addArrow(container)
 
 function addArrow(container) {
-	container
+	return container
 		.append("defs")
 		.append("marker")
 		.attr("id", "arrow")
@@ -46,8 +46,29 @@ function addArrow(container) {
 			M 0 0
 			L 10 5
 			L 0 10
+			L 5 5
 			z
 		`)
+}
+
+export function addMarchingAnts(element, id) {
+	select(element)
+		.append("path")
+		.attr("transform", `scale(0.1)`)
+		.classed("arrow", true)
+		.attr("d", `
+			M 0 0
+			L 10 5
+			L 0 10
+			L 5 5
+			z
+		`)
+		.classed("ant", true)
+		.append("animateMotion")
+		.attr("dur", "3s")
+		.attr("repeatCount", "indefinite")
+		.append("mpath")
+		.attr("href", `#link-${id}`)
 }
 
 // Static and dynamic dimensions

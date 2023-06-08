@@ -1,11 +1,15 @@
 import data from "../data.json"
-import { bounds } from "./chart.js"
+import { bounds, addMarchingAnts } from "./chart.js"
+import { select } from "d3"
 
 export const { nodes, links } = data
 
-export const link = bounds.selectAll(".link")
+export const linkGroup = bounds.selectAll(".link")
 	.data(links)
-	.join("polyline")
+	.join("g")
+
+export const link = linkGroup
+	.append("polyline")
 	.attr("marker-mid", "url(#arrow)")
 	.classed("link", true)
 

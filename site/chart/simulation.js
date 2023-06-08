@@ -1,14 +1,14 @@
 import {
 	forceSimulation, forceManyBody, forceX,
 	forceY, forceCollide, forceLink,
-	interpolateZoom,
+	interpolateZoom, select,
 } from "d3"
-import { nodes, links, link, circle, text, linkCounts } from "./data.js"
+import { nodes, links, linkGroup, link, circle, text, linkCounts } from "./data.js"
 import clampToBoundary from "./rendering/clamp.js"
 import getLinkLine from "./rendering/link-line.js"
 import attractGroups from "./rendering/attract-groups.js"
 import shapeLinks from "./rendering/shape-links.js"
-import { zoomer, bounds } from "./chart.js"
+import { zoomer, bounds, addMarchingAnts } from "./chart.js"
 
 const {
 	chartBoundary,
@@ -88,7 +88,7 @@ while (count > 0) {
 	ticked()
 	count--
 }
-render({ circle, link, text })
+render({ circle, link, text, linkGroup })
 
 export default simulation
 
@@ -112,7 +112,23 @@ function ticked() {
 	})
 }
 
-export function render({ circle, link, text }) {
+export function render({ linkGroup, circle, link, text }) {
+	linkGroup
+
+	linkGroup
+		.append("svg")
+		.attr("x", ({ source, target }) => {
+			return source.x < target.x ? source.x : target.x
+		})
+		.attr("y", ({ source, target }) => {
+			return source.y > target.y ? source.y : target.y
+		})
+		.attr("preserveAspectRatio", "xMinYMin meet")
+		.attr("viewBox", [0, 0, 10, 10])
+		.each(({ source, target }, i, nodes) => {
+			addMarchingAnts(nodes[i], `${source.id}${target.id}`.replaceAll(" ", ""))
+		})
+
 	circle
 		.attr("cx", d => d.x)
 		.attr("cy", d => d.y)
@@ -127,7 +143,11 @@ export function render({ circle, link, text }) {
 		})
 
 	link
+		.attr("id", (d) => {
+			return `link-${d.source.id}${d.target.id}`.replaceAll(" ", "")
+		})
 		.attr("points", getLinkLine)
+
 
 	text
 		.attr("x", d => d.x)
