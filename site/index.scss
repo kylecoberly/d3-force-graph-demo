@@ -81,7 +81,7 @@ body {
 }
 
 .link {
-	stroke: #ccc;
+	stroke: none;
 	stroke-width: 0.1px;
 	fill: none;
 }
@@ -97,7 +97,7 @@ body {
 }
 
 .arrow {
-	fill: #999;
+	fill: #ccc;
 }
 
 svg {

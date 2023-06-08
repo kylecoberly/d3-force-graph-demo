@@ -3,25 +3,16 @@ import {
 	getSegmentCount,
 	clampToLowerBound,
 	generateMidPoints,
-	generateMidPointsAlt,
 } from "../utilities"
 
 export default function getLinkLine({ source, target }) {
 	const {
 		source: normalizedSource,
 		target: normalizedTarget
-	} = centerToRadius(4, { source, target })
-	// } = { source, target }
+	} = centerToRadius(3, { source, target })
 
 	const segmentCount = getSegmentCount(2, { source: normalizedSource, target: normalizedTarget })
-	// const segments = generateMidPoints(
-	// 	clampToLowerBound(1, segmentCount - 1),
-	// 	{
-	// 		source: normalizedSource,
-	// 		target: normalizedTarget
-	// 	},
-	// )
-	const segments = generateMidPointsAlt(
+	const segments = generateMidPoints(
 		clampToLowerBound(1, segmentCount - 1),
 		{
 			source: normalizedSource,

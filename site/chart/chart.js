@@ -39,7 +39,7 @@ function addArrow(container) {
 		.attr("refY", 5)
 		.attr("markerWidth", 7)
 		.attr("markerHeight", 7)
-		.attr("orient", "auto")
+		.attr("orient", "auto-start-reverse")
 		.attr("class", "arrow")
 		.append("path")
 		.attr("d", `

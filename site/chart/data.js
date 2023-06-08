@@ -7,7 +7,6 @@ export const link = bounds.selectAll(".link")
 	.data(links)
 	.join("polyline")
 	.attr("marker-mid", "url(#arrow)")
-	.attr("marker-end", "url(#arrow)")
 	.classed("link", true)
 
 export const node = bounds.selectAll(".node")
