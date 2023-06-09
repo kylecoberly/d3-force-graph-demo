@@ -1,3 +1,5 @@
+import { max, min } from "d3"
+
 export function getCentroids(nodes) {
 	const groupCoordinates = getGroupCoordinates(nodes)
 
@@ -98,4 +100,38 @@ export function generateMidPoints(count, { source, target }) {
 	}
 
 	return midPoints
+}
+
+export function getLinkCounts(links) {
+	return links.reduce((counts, link) => {
+		counts[link.source] = counts[link.source] ?? { from: 0, to: 0 }
+		counts[link.target] = counts[link.target] ?? { from: 0, to: 0 }
+		counts[link.source].from = counts[link.source].from + 1
+		counts[link.target].to = counts[link.target].to + 1
+		return counts
+	}, {})
+}
+
+export function clampToBoundary(nodes, size) {
+	nodes.forEach(d => {
+		d.x = max([d.x, -size])
+		d.y = max([d.y, -size])
+		d.x = min([d.x, size])
+		d.y = min([d.y, size])
+	})
+}
+
+export function scale({ source, target }, factor = 0.1) {
+	return {
+		source: {
+			...source,
+			x: source.x * factor,
+			y: source.y * factor,
+		},
+		target: {
+			...target,
+			x: target.x * factor,
+			y: target.y * factor,
+		}
+	}
 }

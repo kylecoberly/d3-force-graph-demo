@@ -1,99 +1,84 @@
 import { select, zoom } from "d3"
-import simulation from "./simulation.js"
 
-// Canvas
-export const {
-	width, height, boundedWidth, boundedHeight, margin,
-} = getDimensions({
-	// width: d3.min([window.innerWidth * 0.9, window.innerHeight * 0.9]),
-	width: window.innerWidth,
-	height: window.innerHeight,
-	margin: {
-		top: 10,
-		right: 10,
-		bottom: 10,
-		left: 10,
-	},
-})
-export const { top, right, bottom, left } = margin
-
-export const container = select("#container")
+export const svg = select("#container")
 	.append("svg")
 	.attr("preserveAspectRatio", "xMinYMin meet")
 	.attr("viewBox", [-50, -50, 100, 100])
+	.attr("width", "100%")
+	.attr("height", "100%")
 
-export const bounds = container
+export const bounds = svg
 	.append("g")
 	.classed("bounds", true)
 
+const defs = svg.append("defs")
+
 // Link arrow
-addArrow(container)
+defs
+	.append("marker")
+	.classed("arrow", true)
+	.attr("refX", 5)
+	.attr("refY", 5)
+	.attr("markerWidth", 7)
+	.attr("markerHeight", 7)
+	.attr("orient", "auto-start-reverse")
+	.attr("class", "arrow")
+	.append("path")
+	.attr("d", `
+		M 0 0
+		L 10 5
+		L 0 10
+		L 5 5
+		z
+	`)
 
-function addArrow(container) {
-	return container
-		.append("defs")
-		.append("marker")
-		.attr("id", "arrow")
-		.attr("viewBox", [0, 0, 10, 10])
-		.attr("refX", 5)
-		.attr("refY", 5)
-		.attr("markerWidth", 7)
-		.attr("markerHeight", 7)
-		.attr("orient", "auto-start-reverse")
-		.attr("class", "arrow")
-		.append("path")
-		.attr("d", `
-			M 0 0
-			L 10 5
-			L 0 10
-			L 5 5
-			z
-		`)
-}
-
-export function addMarchingAnts(element, id) {
-	select(element)
-		.append("path")
-		.attr("transform", `scale(0.1)`)
-		.classed("arrow", true)
-		.attr("d", `
-			M 0 0
-			L 10 5
-			L 0 10
-			L 5 5
-			z
-		`)
-		.classed("ant", true)
-		.append("animateMotion")
-		.attr("dur", "3s")
-		.attr("repeatCount", "indefinite")
-		.append("mpath")
-		.attr("href", `#link-${id}`)
-}
-
-// Static and dynamic dimensions
-function getDimensions({ height, width, margin }) {
-	const { top, bottom, left, right } = margin
-
-	return {
-		height,
-		width,
-		margin,
-		boundedHeight: height - top - bottom,
-		boundedWidth: width - left - right,
-	}
-}
-
-// Restart on resize
-select(window).on("resize", () => {
-	simulation.restart()
-})
+// Circle Node
+defs
+	.append("symbol")
+	.attr("id", "circle")
+	.attr("viewBox", "-5 -5 10 10")
+	.attr("width", 5)
+	.attr("height", 5)
+	.attr("r", 4)
+	.attr("cx", 0)
+	.attr("cr", 0)
 
 // Enable Zoom
-function zoomed({ transform }) {
-	bounds.attr("transform", transform)
-}
-
 export const zoomer = zoom().scaleExtent([1 / 2, 3])
 
-container.call(zoomer.on("zoom", zoomed))
+svg.call(zoomer.on("zoom", ({ transform }) => {
+	bounds.attr("transform", transform)
+}))
+
+
+////////////
+
+function centerNode(x, y) {
+	const transform = bounds.node().attributes?.transform?.value
+	const offset = transform
+		? transform.match(/translate\((.+?)\)/)[1].split(",").map(match => +match)
+		: [0, 0]
+	const differential = [
+		offset[0] - x,
+		offset[1] - y,
+	]
+
+	const interpolator = interpolateZoom([offset[0], offset[1], 1], [x, y, 2])
+	const zoomAndPan = (t) => {
+		const view = interpolator(t)
+		const box = bounds.node().getBoundingClientRect()
+		const w = box.width
+		const h = box.height
+		// const k = Math.min(w, h) / view[2]; // scale
+		const k = view[2]; // scale
+		const translate = [
+			w / 2 - view[0] * k,
+			h / 2 - view[1] * k
+		]; // translate
+		console.log(w, h, k, translate)
+		return `translate(${translate[0]},${translate[1]}) scale(${k})`
+		// `translate(${differential[0]},${differential[1]}) scale(2)`
+	}
+
+	bounds.transition().duration(1000).attrTween("transform", () => zoomAndPan)
+}
