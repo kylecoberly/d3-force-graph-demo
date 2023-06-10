@@ -1,7 +1,7 @@
 import { select, zoom } from "d3"
 
 const height = 800
-const width = 800
+const width = 1500
 
 export const svg = select("#container")
 	.append("svg")
@@ -14,45 +14,14 @@ export const bounds = svg
 	.append("g")
 	.classed("bounds", true)
 
-const defs = svg.append("defs")
-
-// Link arrow
-defs
-	.append("marker")
-	.classed("arrow", true)
-	.attr("refX", 5)
-	.attr("refY", 5)
-	.attr("markerWidth", 7)
-	.attr("markerHeight", 7)
-	.attr("orient", "auto-start-reverse")
-	.attr("class", "arrow")
-	.append("path")
-	.attr("d", `
-		M 0 0
-		L 10 5
-		L 0 10
-		L 5 5
-		z
-	`)
-
-// Circle Node
-defs
-	.append("symbol")
-	.attr("id", "circle")
-	.attr("viewBox", "-5 -5 10 10")
-	.attr("width", 20)
-	.attr("height", 20)
-	.attr("r", 4)
-	.attr("cx", 0)
-	.attr("cr", 0)
 
 // Enable Zoom
-const minimumZoom = 1
+const minimumZoom = 4
 const maximumZoom = 30
-svg
-	.attr("transform", "scale(5)")
-export const zoomer = zoom().scaleExtent([minimumZoom, maximumZoom])
+const defaultZoom = 4
 
+export const zoomer = zoom().scaleExtent([minimumZoom, maximumZoom])
+bounds.attr("transform", `scale(${defaultZoom})`)
 svg.call(zoomer.on("zoom", ({ transform }) => {
 	bounds.attr("transform", transform)
 }))

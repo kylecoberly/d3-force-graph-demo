@@ -1,4 +1,7 @@
-import { addLink, addMarchingAnts, addTextLabel, addCircles } from "./elements.js"
+import {
+	positionArrow, addLink, addMarchingAnts,
+	addTextLabel, addCircles
+} from "./elements.js"
 
 export default function render({ linkGroup, node, linkCounts, text }) {
 	node
@@ -14,6 +17,7 @@ export default function render({ linkGroup, node, linkCounts, text }) {
 	linkGroup
 		.each(({ source, target }, i, nodes) => {
 			addLink(nodes[i])
-			addMarchingAnts(nodes[i], `${source.id}${target.id}`.replaceAll(" ", ""))
+			const arrow = addMarchingAnts(nodes[i], { source, target })
+			positionArrow(arrow, { source, target })
 		})
 }
