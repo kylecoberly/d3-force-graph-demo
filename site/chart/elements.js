@@ -6,7 +6,7 @@ import {
 	clampToLowerBound,
 	generateMidPoints,
 } from "./utilities.js"
-import { svg, bounds } from "./chart.js"
+import { svg, bounds, centerNode } from "./chart.js"
 
 export const { nodes, links } = data
 
@@ -89,9 +89,8 @@ export function addCircles(element, linkCounts) {
 		.classed("completed", (d) => d.complete)
 		.classed("in-progress", (d) => d["in_progress"])
 		.classed("critical", (d) => d.critical)
-		.on("click", (event) => {
-			const { cx, cy } = event.target.attributes
-			// centerNode(cx.value, cy.value)
+		.on("click", function(event, d) {
+			centerNode(d.x, d.y)
 		})
 		.append("use")
 		.attr("href", "#circle")

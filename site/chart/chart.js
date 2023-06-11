@@ -1,4 +1,4 @@
-import { select, zoom as _zoom, zoomIdentity } from "d3"
+import { select, zoom as _zoom, zoomIdentity, interpolateZoom } from "d3"
 
 const height = 800
 const width = 1500
@@ -6,7 +6,6 @@ const width = 1500
 // Enable Zoom
 const minimumZoom = 1
 const maximumZoom = 30
-const defaultZoom = 4
 export const zoom = _zoom().scaleExtent([minimumZoom, maximumZoom])
 
 export const svg = select("#container")
@@ -19,7 +18,10 @@ export const svg = select("#container")
 export const bounds = svg
 	.append("g")
 	.classed("bounds", true)
+	.attr("width", `${width}`)
+	.attr("height", `${height}`)
 
+const defaultZoom = 4
 svg
 	.call(zoom)
 	.call(zoom.on("zoom", ({ transform }) => {
@@ -28,34 +30,45 @@ svg
 	.call(zoom.transform, zoomIdentity.scale(defaultZoom))
 
 
-////////////
+export function centerNode(cx, cy) {
+	// console.log("cxy", cx, cy)
+	// const currentTranslate = bounds.attr("transform").match(/translate\((.+?),(.+?)\)/)
+	// const currentScale = bounds.attr("transform").match(/scale\((.+?)\)/)[1]
+	// // const transform = d3.zoomIdentity.translate(x, y).scale(k);
+	// const viewport = {
+	// 	width: +bounds.attr("width") / currentScale,
+	// 	height: +bounds.attr("height") / currentScale,
+	// }
+	// const source = {
+	// 	cx: +currentTranslate[1] || 0,
+	// 	cy: +currentTranslate[2] || 0,
+	// 	// width: viewport.width / currentScale,
+	// 	width: 400,
+	// }
+	// const target = { cx, cy, width: 50 }
+	// console.log({ source, target })
 
-// function centerNode(x, y) {
-// 	const transform = bounds.node().attributes?.transform?.value
-// 	const offset = transform
-// 		? transform.match(/translate\((.+?)\)/)[1].split(",").map(match => +match)
-// 		: [0, 0]
-// 	const differential = [
-// 		offset[0] - x,
-// 		offset[1] - y,
-// 	]
-//
-// 	const interpolator = interpolateZoom([offset[0], offset[1], 1], [x, y, 2])
-// 	const zoomAndPan = (t) => {
-// 		const view = interpolator(t)
-// 		const box = bounds.node().getBoundingClientRect()
-// 		const w = box.width
-// 		const h = box.height
-// 		// const k = Math.min(w, h) / view[2]; // scale
-// 		const k = view[2]; // scale
-// 		const translate = [
-// 			w / 2 - view[0] * k,
-// 			h / 2 - view[1] * k
-// 		]; // translate
-// 		console.log(w, h, k, translate)
-// 		return `translate(${translate[0]},${translate[1]}) scale(${k})`
-// 		// `translate(${differential[0]},${differential[1]}) scale(2)`
-// 	}
-//
-// 	bounds.transition().duration(1000).attrTween("transform", () => zoomAndPan)
-// }
+	// g.attr("transform", transform)
+	const t = zoomIdentity.scale(20).translate(cx, cy)
+	console.log(t)
+
+	bounds
+		.transition()
+		.duration(1000)
+		.call(zoom.transform, zoomIdentity.scale(1).translate(cx, cy)).scale(20)
+	// .attrTween("transform", () => ((step) => {
+	// const [currentX, currentY, currentWidth] = interpolateZoom([
+	// 	+source.cx,
+	// 	+source.cy,
+	// 	+source.width,
+	// ], [
+	// 	+target.cx,
+	// 	+target.cy,
+	// 	+target.width,
+	// ])(step)
+
+	// const currentScale = source.width / currentWidth
+	// console.log("scale", currentX, currentY, currentWidth, source.width, currentScale)
+	// return `translate(${currentX},${currentY}) scale(${currentScale})`
+	// }))
+}
