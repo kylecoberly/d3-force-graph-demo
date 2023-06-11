@@ -1,12 +1,18 @@
-import { select, zoom } from "d3"
+import { select, zoom as _zoom, zoomIdentity } from "d3"
 
 const height = 800
 const width = 1500
 
+// Enable Zoom
+const minimumZoom = 1
+const maximumZoom = 30
+const defaultZoom = 4
+export const zoom = _zoom().scaleExtent([minimumZoom, maximumZoom])
+
 export const svg = select("#container")
 	.append("svg")
 	.attr("preserveAspectRatio", "xMinYMin meet")
-	.attr("viewBox", [width / -2, height / -2, width, height])
+	.attr("viewBox", [width / -4, height / -2, width, height])
 	.attr("width", `${width}px`)
 	.attr("height", `${height}px`)
 
@@ -14,17 +20,12 @@ export const bounds = svg
 	.append("g")
 	.classed("bounds", true)
 
-
-// Enable Zoom
-const minimumZoom = 4
-const maximumZoom = 30
-const defaultZoom = 4
-
-export const zoomer = zoom().scaleExtent([minimumZoom, maximumZoom])
-bounds.attr("transform", `scale(${defaultZoom})`)
-svg.call(zoomer.on("zoom", ({ transform }) => {
-	bounds.attr("transform", transform)
-}))
+svg
+	.call(zoom)
+	.call(zoom.on("zoom", ({ transform }) => {
+		bounds.attr("transform", transform)
+	}))
+	.call(zoom.transform, zoomIdentity.scale(defaultZoom))
 
 
 ////////////

@@ -81,8 +81,8 @@ body {
 }
 
 .link {
-	stroke-width: 0;
-	stroke: none;
+	stroke-width: 0.1;
+	stroke: $grey-9;
 }
 
 .ant {
@@ -106,6 +106,25 @@ body {
 	stroke-width: 0.1px;
 	stroke: $primary-7 !important;
 	font-size: 0.1em;
+	animation: blink 1.5s infinite;
+}
+
+@keyframes blink {
+	from {
+		opacity: 0;
+	}
+
+	20% {
+		opacity: 1;
+	}
+
+	80% {
+		opacity: 1;
+	}
+
+	to {
+		opacity: 0;
+	}
 }
 
 #container {

@@ -5,7 +5,6 @@ import {
 	getSegmentCount,
 	clampToLowerBound,
 	generateMidPoints,
-	scale,
 } from "./utilities.js"
 import { svg, bounds } from "./chart.js"
 
@@ -66,7 +65,7 @@ export function addMarchingAnts(element, { source, target }) {
 		.append("g")
 
 	arrow.append("animateMotion")
-		.attr("dur", "3s")
+		.attr("dur", "0.5s")
 		.attr("repeatCount", "indefinite")
 		.append("mpath")
 		.attr("href", `#link-${id}`)
@@ -74,7 +73,7 @@ export function addMarchingAnts(element, { source, target }) {
 	arrow.append("use")
 		.attr("href", "#arrow")
 		.classed("ant", true)
-		.attr("transform", `translate(10 6) rotate(${angle})`)
+		.attr("transform", `rotate(${angle})`)
 
 	return arrow
 }
@@ -127,7 +126,7 @@ export function getLinkLine({ source, target }) {
 	const {
 		source: normalizedSource,
 		target: normalizedTarget
-	} = centerToRadius(6, { source, target })
+	} = centerToRadius(5, { source, target })
 
 	const segmentCount = getSegmentCount(2, { source: normalizedSource, target: normalizedTarget })
 	const segments = generateMidPoints(
@@ -146,7 +145,8 @@ export function getLinkLine({ source, target }) {
 }
 
 export function positionArrow(arrow) {
-	const offset = "-10 -5"
+	// Handle offset left vs. right translation here from the angle
+	const offset = "-1 0"
 
 	return arrow.attr("transform", `translate(${offset})`)
 }
