@@ -28,7 +28,7 @@ export const text = node
 const defs = svg.append("defs")
 
 // Arrow symbol
-const arrow = defs
+defs
 	.append("symbol")
 	.attr("id", "arrow")
 	.attr("viewBox", "0 0 10 10")
@@ -81,18 +81,17 @@ export function addMarchingAnts(element, { source, target }) {
 export function addCircles(element, linkCounts) {
 	return select(element)
 		.append("g")
-		.attr("cx", d => d.x)
-		.attr("cy", d => d.y)
-		.attr("transform", d => `translate(${d.x - 2} ${d.y - 2})`) // Account for radius
 		.classed("open", (d) => linkCounts[d.id]?.to === 0)
 		.classed("closed", (d) => linkCounts[d.id]?.to !== 0)
 		.classed("completed", (d) => d.complete)
 		.classed("in-progress", (d) => d["in_progress"])
 		.classed("critical", (d) => d.critical)
-		.on("click", function(event, d) {
-			centerNode(d.x, d.y)
+		.on("click", (_, { x, y }) => {
+			centerNode(x, y)
 		})
 		.append("use")
+		.attr("x", d => Math.round(d.x))
+		.attr("y", d => Math.round(d.y))
 		.attr("href", "#circle")
 }
 
@@ -115,8 +114,8 @@ export function addTextLabel(element) {
 	}
 
 	return select(element)
-		.attr("x", d => d.x + textOffset.x)
-		.attr("y", d => d.y + textOffset.y)
+		.attr("x", d => Math.round(d.x + textOffset.x))
+		.attr("y", d => Math.round(d.y + textOffset.y))
 		.attr("text-anchor", "middle")
 		.text(d => d.id)
 }
