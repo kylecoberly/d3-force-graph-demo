@@ -1,5 +1,5 @@
 import {
-	positionArrow, addLink, addMarchingAnts,
+	addLink, addMarchingAnts,
 	addTextLabel, addCircles
 } from "./elements.js"
 
