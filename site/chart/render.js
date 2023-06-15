@@ -17,7 +17,6 @@ export default function render({ linkGroup, node, linkCounts, text }) {
 	linkGroup
 		.each(({ source, target }, i, nodes) => {
 			addLink(nodes[i])
-			const arrow = addMarchingAnts(nodes[i], { source, target })
-			positionArrow(arrow, { source, target })
+			addMarchingAnts(nodes[i], { source, target })
 		})
 }

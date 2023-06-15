@@ -56,10 +56,15 @@ defs
 	.attr("cx", 0)
 	.attr("cr", 0)
 
+function toDegrees(radians) {
+	return radians * (180 / Math.PI)
+}
+
 export function addMarchingAnts(element, { source, target }) {
 	const id = `${source.id}${target.id}`.replaceAll(" ", "")
-	// const { source: normalizedSource, target: normalizedTarget } = centerToRadius(4, { source, target })
-	const angle = Math.atan2(target.y - source.y, target.x - source.x) * (180 / Math.PI)
+	const dx = target.x - source.x
+	const dy = target.y - source.y
+	const angle = toDegrees(Math.atan2(dy, dx))
 
 	const arrow = select(element)
 		.append("g")
@@ -73,12 +78,16 @@ export function addMarchingAnts(element, { source, target }) {
 	arrow.append("use")
 		.attr("href", "#arrow")
 		.classed("ant", true)
-		.attr("transform", `rotate(${angle})`)
+		.attr("transform", `rotate(${angle}) translate(0, -1)`)
 
 	return arrow
 }
 
 export function addCircles(element, linkCounts) {
+	const offset = {
+		x: 2,
+		y: 2,
+	}
 	return select(element)
 		.append("g")
 		.classed("open", (d) => linkCounts[d.id]?.to === 0)
@@ -90,8 +99,8 @@ export function addCircles(element, linkCounts) {
 			centerNode(x, y)
 		})
 		.append("use")
-		.attr("x", d => Math.round(d.x))
-		.attr("y", d => Math.round(d.y))
+		.attr("x", d => Math.round(d.x - offset.x))
+		.attr("y", d => Math.round(d.y - offset.y))
 		.attr("href", "#circle")
 }
 
@@ -108,8 +117,8 @@ export function addTextLabel(element) {
 		textOffset,
 	} = {
 		textOffset: {
-			x: 2.1,
-			y: 6,
+			x: 0,
+			y: 4,
 		},
 	}
 
@@ -124,7 +133,7 @@ export function getLinkLine({ source, target }) {
 	const {
 		source: normalizedSource,
 		target: normalizedTarget
-	} = centerToRadius(5, { source, target })
+	} = centerToRadius(4, { source, target })
 
 	const segmentCount = getSegmentCount(2, { source: normalizedSource, target: normalizedTarget })
 	const segments = generateMidPoints(
@@ -140,11 +149,4 @@ export function getLinkLine({ source, target }) {
 		...segments,
 		normalizedTarget.x, normalizedTarget.y,
 	]
-}
-
-export function positionArrow(arrow) {
-	// Handle offset left vs. right translation here from the angle
-	const offset = "-1 0"
-
-	return arrow.attr("transform", `translate(${offset})`)
 }
