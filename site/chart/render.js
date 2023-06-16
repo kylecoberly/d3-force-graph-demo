@@ -8,11 +8,11 @@ import {
 } from "./focus.js"
 
 export default function render({ linkGroup, node, linkCounts, text }) {
-	addCircles(node, linkCounts)
-	addTextLabel(text)
-
 	addLink(linkGroup)
 	addMarchingAnts(linkGroup)
+
+	addCircles(node, linkCounts)
+	addTextLabel(text)
 }
 
 function addCircles(node, linkCounts) {
@@ -40,20 +40,16 @@ function addCircles(node, linkCounts) {
 }
 
 function addTextLabel(node) {
-	const {
-		textOffset,
-	} = {
-		textOffset: {
-			x: 0,
-			y: 4,
-		},
+	const offset = {
+		x: 0,
+		y: 4,
 	}
 
 	node
-		.attr("x", d => Math.round(d.x + textOffset.x))
-		.attr("y", d => Math.round(d.y + textOffset.y))
+		.attr("x", ({ x }) => Math.round(x + offset.x))
+		.attr("y", ({ y }) => Math.round(y + offset.y))
 		.attr("text-anchor", "middle")
-		.text(d => d.id)
+		.text(({ id }) => id)
 }
 
 function addLink(link) {
@@ -61,9 +57,7 @@ function addLink(link) {
 		.append("path")
 		.classed("link", true)
 		.attr("id", ({ source, target }) => `link-${source.id}${target.id}`.replaceAll(" ", ""))
-		.attr("d", ({ source, target }) => {
-			return `M${source.x},${source.y} ${target.x},${target.y}`
-		})
+		.attr("d", ({ source, target }) => `M${source.x},${source.y} ${target.x},${target.y}`)
 }
 
 function addMarchingAnts(link) {

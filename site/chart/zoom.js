@@ -35,7 +35,7 @@ export function attachZoom({ bounds, svg }) {
 		.call(
 			zoom.transform,
 			zoomIdentity
-				.translate(width / -constraintFactor, height / -constraintFactor)
+				.translate(0, 0)
 				.scale(initial)
 		)
 }

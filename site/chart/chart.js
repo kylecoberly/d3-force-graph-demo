@@ -1,5 +1,6 @@
 import { select } from "d3"
 import { attachZoom } from "./zoom.js"
+import { attachFocus } from "./focus.js"
 import { chart } from "./options.js"
 
 const { height, width } = chart
@@ -18,3 +19,4 @@ export const bounds = svg
 	.attr("height", `${height}`)
 
 attachZoom({ svg, bounds })
+attachFocus(svg)

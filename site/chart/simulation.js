@@ -45,12 +45,12 @@ function runSimulation(simulation) {
 	let count = simulationOptions.tickCount
 	while (count > 0) {
 		simulation.tick()
-		tick()
+		update(simulation)
 		count--
 	}
 }
 
-function tick() {
+function update(simulation) {
 	const nodes = simulation.nodes()
 	const alpha = simulation.alpha()
 

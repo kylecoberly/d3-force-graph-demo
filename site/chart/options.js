@@ -8,16 +8,16 @@ export const {
 	chart: {
 		height: 800,
 		width: 1500,
-		boundary: 150,
+		boundary: 300,
 	},
 	zoom: {
 		initial: 4,
 		minimum: 4,
 		maximum: 30,
-		constraintFactor: 6,
+		constraintFactor: 7,
 	},
 	focus: {
-		duration: 1000,
+		duration: 500,
 		scale: 18,
 	},
 	simulation: {
@@ -48,11 +48,11 @@ export const {
 			},
 		},
 		group: {
-			charge: 0,
+			charge: 1,
 			link: {
 				strength: {
 					initial: 1,
-					final: 0.2,
+					final: 0.5,
 				},
 			},
 			distance: {
