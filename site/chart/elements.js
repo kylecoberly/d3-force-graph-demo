@@ -8,12 +8,20 @@ import {
 } from "./utilities.js"
 import { svg, bounds, centerNode } from "./chart.js"
 
+const $details = document.querySelector(".details")
+
 export const { nodes, links } = data
 
 export const linkGroup = bounds
 	.selectAll(".link")
 	.data(links)
 	.join("g")
+
+svg.on("click", function(event) {
+	if (event.target.tagName !== "use") {
+		$details.classList.remove("open")
+	}
+})
 
 export const node = bounds
 	.selectAll(".node")
@@ -32,8 +40,6 @@ defs
 	.append("symbol")
 	.attr("id", "arrow")
 	.attr("viewBox", "0 0 10 10")
-	.attr("width", 2)
-	.attr("height", 2)
 	.append("path")
 	.classed("arrow", true)
 	.attr("d", `
@@ -49,8 +55,6 @@ defs
 	.append("symbol")
 	.attr("id", "circle")
 	.attr("viewBox", "-5 -5 10 10")
-	.attr("width", 4)
-	.attr("height", 4)
 	.append("circle")
 	.attr("r", 4)
 	.attr("cx", 0)
@@ -69,16 +73,17 @@ export function addMarchingAnts(element, { source, target }) {
 	const arrow = select(element)
 		.append("g")
 
-	arrow.append("animateMotion")
+	arrow.append("use")
+		.attr("href", "#arrow")
+		.attr("width", 2)
+		.attr("height", 2)
+		.classed("ant", true)
+		.attr("transform", `rotate(${angle}) translate(0, -1)`)
+		.append("animateMotion")
 		.attr("dur", "0.5s")
 		.attr("repeatCount", "indefinite")
 		.append("mpath")
 		.attr("href", `#link-${id}`)
-
-	arrow.append("use")
-		.attr("href", "#arrow")
-		.classed("ant", true)
-		.attr("transform", `rotate(${angle}) translate(0, -1)`)
 
 	return arrow
 }
@@ -95,21 +100,34 @@ export function addCircles(element, linkCounts) {
 		.classed("completed", (d) => d.complete)
 		.classed("in-progress", (d) => d["in_progress"])
 		.classed("critical", (d) => d.critical)
-		.on("click", (_, { x, y }) => {
-			centerNode(x, y)
+		.on("click", (_, d) => {
+			centerNode(d.x, d.y)
+			showDetails(d)
 		})
 		.append("use")
+		.attr("width", 4)
+		.attr("height", 4)
 		.attr("x", d => Math.round(d.x - offset.x))
 		.attr("y", d => Math.round(d.y - offset.y))
 		.attr("href", "#circle")
 }
 
+function showDetails(d) {
+	$details.classList.add("open")
+	$details.innerHTML = `
+			<h2>${d.id}</h2>
+			<p>${d.id}</p>
+		`
+}
+
 export function addLink(element) {
 	return select(element)
-		.append("polyline")
+		.append("path")
 		.classed("link", true)
 		.attr("id", (d) => `link-${d.source.id}${d.target.id}`.replaceAll(" ", ""))
-		.attr("points", getLinkLine)
+		.attr("d", ({ source, target }) => {
+			return `M${source.x},${source.y} ${target.x},${target.y}`
+		})
 }
 
 export function addTextLabel(element) {

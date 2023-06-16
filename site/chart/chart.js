@@ -37,12 +37,17 @@ export const zoom = _zoom()
 
 svg
 	.call(zoom)
-	.call(zoom.transform, zoomIdentity.scale(defaultZoom))
+	.call(
+		zoom.transform,
+		zoomIdentity
+			.translate(width / -constraintFactor, height / -constraintFactor)
+			.scale(defaultZoom)
+	)
 
 export function centerNode(x, y) {
 	const duration = 1000
 	const scale = 18
-	const transform = zoomIdentity.scale(scale).translate(-x, -y)
+	const transform = zoomIdentity.translate(-x, -y).scale(scale)
 
 	svg
 		.transition()

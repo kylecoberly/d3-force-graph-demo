@@ -132,6 +132,7 @@ body {
 	width: 80%;
 	max-height: 800px;
 	overflow: hidden;
+	position: relative;
 }
 
 #circle {
@@ -173,4 +174,20 @@ body {
 
 circle:not(.critical) {
 	fill: $white;
+}
+
+.details {
+	position: absolute;
+	width: 300px;
+	height: 100%;
+	right: -400px;
+	top: 0;
+	background-color: $white;
+	padding: 16px;
+	box-shadow: 0 0 20px hsl(0, 0%, 70%);
+	transition: right 0.5s;
+}
+
+.details.open {
+	right: 0;
 }
