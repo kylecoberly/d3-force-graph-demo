@@ -3,6 +3,10 @@ import {
 	toDegrees,
 } from "./utilities.js"
 import "./icons.js"
+import {
+	centerNode,
+	showDetails,
+} from "./focus.js"
 
 export default function render({ linkGroup, node, linkCounts, text }) {
 	node

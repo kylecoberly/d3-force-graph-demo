@@ -1,10 +1,11 @@
 import { zoomIdentity } from "d3"
 import { svg } from "./chart.js"
-import options from "./options.js"
+import { focus } from "./options.js"
 const {
 	duration,
 	scale,
-} = options.focus
+} = focus
+import zoom from "./zoom.js"
 
 const $details = document.querySelector(".details")
 

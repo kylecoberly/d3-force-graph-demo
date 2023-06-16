@@ -1,8 +1,8 @@
 import { select } from "d3"
 import { attachZoom } from "./zoom.js"
-import { dimensions } from "./options.js"
+import { chart } from "./options.js"
 
-const { height, width } = dimensions
+const { height, width } = chart
 
 export const svg = select("#container")
 	.append("svg")

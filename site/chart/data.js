@@ -2,11 +2,6 @@ import { bounds } from "./chart.js"
 import data from "../data.json"
 export const { nodes, links } = data
 
-export const linkGroup = bounds
-	.selectAll(".link")
-	.data(links)
-	.join("g")
-
 export const node = bounds
 	.selectAll(".node")
 	.data(nodes)
@@ -16,3 +11,8 @@ export const node = bounds
 export const text = node
 	.append("text")
 	.classed("label", true)
+
+export const linkGroup = bounds
+	.selectAll(".link")
+	.data(links)
+	.join("g")

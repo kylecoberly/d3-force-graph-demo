@@ -1,22 +1,14 @@
 export const {
-	dimensions,
+	chart,
 	zoom,
-	tickCount,
-	chartBoundary,
-	alphaCutoff,
-	positionalForce,
-	chargeStrength,
-	collisionStrength,
-	linkDistance,
-	linkStrength,
-	groupLinkStrength,
-	groupChargeStrength,
-	groupDistanceCutoff,
-	groupDistanceCutoffSpeed,
+	focus,
+	simulation,
+	forces,
 } = {
-	dimensions: {
+	chart: {
 		height: 800,
 		width: 1500,
+		boundary: 150,
 	},
 	zoom: {
 		initial: 4,
@@ -28,34 +20,45 @@ export const {
 		duration: 1000,
 		scale: 18,
 	},
-	tickCount: 300,
-	chartBoundary: 300,
-	alphaCutoff: 0.3,
-	positionalForce: {
-		x: 0,
-		y: 0,
+	simulation: {
+		tickCount: 300,
+		alphaCutoff: 0.3,
 	},
-	chargeStrength: {
-		initial: -100,
-		final: -10,
+	forces: {
+		positional: {
+			x: 0,
+			y: 0,
+		},
+		charge: {
+			initial: -100,
+			final: -10,
+		},
+		collision: {
+			initial: 0,
+			final: 0,
+		},
+		link: {
+			distance: {
+				initial: 0.1,
+				final: 1,
+			},
+			strength: {
+				initial: 0.2,
+				final: 0.9,
+			},
+		},
+		group: {
+			charge: 0,
+			link: {
+				strength: {
+					initial: 1,
+					final: 0.2,
+				},
+			},
+			distance: {
+				cutoff: 50,
+				rate: 100,
+			},
+		},
 	},
-	collisionStrength: {
-		initial: 0,
-		final: 0,
-	},
-	linkDistance: {
-		initial: 0.1,
-		final: 1,
-	},
-	linkStrength: {
-		initial: 0.2,
-		final: 0.9,
-	},
-	groupLinkStrength: {
-		initial: 1,
-		final: 0.2,
-	},
-	groupChargeStrength: 0,
-	groupDistanceCutoff: 5,
-	groupDistanceCutoffSpeed: 100,
 }
