@@ -4,13 +4,13 @@ import {
 } from "d3"
 import {
 	nodes, links, linkGroup, text, node
-} from "./elements.js"
+} from "./data.js"
 import { getLinkCounts, clampToBoundary } from "./utilities.js"
 import render from "./render.js"
 import attractGroups from "./calculations/attract-groups.js"
 import shapeLinks from "./calculations/shape-links.js"
 
-const {
+import {
 	chartBoundary,
 	alphaCutoff,
 	positionalForce,
@@ -22,37 +22,8 @@ const {
 	groupChargeStrength,
 	groupDistanceCutoff,
 	groupDistanceCutoffSpeed,
-} = {
-	chartBoundary: 300,
-	alphaCutoff: 0.3,
-	positionalForce: {
-		x: 0,
-		y: 0,
-	},
-	chargeStrength: {
-		initial: -100,
-		final: -10,
-	},
-	collisionStrength: {
-		initial: 0,
-		final: 0,
-	},
-	linkDistance: {
-		initial: 0.1,
-		final: 1,
-	},
-	linkStrength: {
-		initial: 0.2,
-		final: 0.9,
-	},
-	groupLinkStrength: {
-		initial: 1,
-		final: 0.2,
-	},
-	groupChargeStrength: 0,
-	groupDistanceCutoff: 5,
-	groupDistanceCutoffSpeed: 100,
-}
+} from "./options.js"
+
 
 const linkCounts = getLinkCounts(links)
 const simulation = getSimulation({ nodes, links })
@@ -96,12 +67,12 @@ function runSimulation(simulation) {
 	let count = 300
 	while (count > 0) {
 		simulation.tick()
-		ticked()
+		tick()
 		count--
 	}
 }
 
-function ticked() {
+function tick() {
 	const nodes = simulation.nodes()
 	const alpha = simulation.alpha()
 

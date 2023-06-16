@@ -1,7 +1,8 @@
-import { select, zoom as _zoom, zoomIdentity, interpolate } from "d3"
+import { select } from "d3"
+import { attachZoom } from "./zoom.js"
+import { dimensions } from "./options.js"
 
-const height = 800
-const width = 1500
+const { height, width } = dimensions
 
 export const svg = select("#container")
 	.append("svg")
@@ -16,41 +17,4 @@ export const bounds = svg
 	.attr("width", `${width}`)
 	.attr("height", `${height}`)
 
-// Enable Zoom
-const defaultZoom = 4
-const minimumZoom = 4
-const maximumZoom = 30
-const constraintFactor = 6
-
-export const zoom = _zoom()
-	.interpolate(interpolate)
-	.scaleExtent([minimumZoom, maximumZoom])
-	.translateExtent([
-		[
-			width / -constraintFactor, height / -constraintFactor
-		], [
-			width / constraintFactor, height / constraintFactor
-		]
-	]).on("zoom", ({ transform }) => {
-		bounds.attr("transform", transform)
-	})
-
-svg
-	.call(zoom)
-	.call(
-		zoom.transform,
-		zoomIdentity
-			.translate(width / -constraintFactor, height / -constraintFactor)
-			.scale(defaultZoom)
-	)
-
-export function centerNode(x, y) {
-	const duration = 1000
-	const scale = 18
-	const transform = zoomIdentity.translate(-x, -y).scale(scale)
-
-	svg
-		.transition()
-		.duration(duration)
-		.call(zoom.transform, transform)
-}
+attachZoom({ svg, bounds })

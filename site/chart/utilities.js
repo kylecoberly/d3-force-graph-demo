@@ -1,4 +1,4 @@
-import { max, min } from "d3"
+import { min, max } from "d3"
 
 export function getCentroids(nodes) {
 	const groupCoordinates = getGroupCoordinates(nodes)
@@ -44,64 +44,6 @@ export function getDistance({ x: x1, y: y1 }, { x: x2, y: y2 }) {
 	)
 }
 
-export function getSegmentCount(segmentLength, { source, target }) {
-	const distance = getDistance(source, target)
-	return Math.ceil(distance / segmentLength)
-}
-
-export function clampToLowerBound(limit, value) {
-	return (value < limit) ? limit : value
-}
-
-export function centerToRadius(radius, { source, target }) {
-	const { sine, cosine } = getSine(radius, { target, source })
-
-	return {
-		source: {
-			...source,
-			x: source.x + cosine,
-			y: source.y + sine,
-		}, target: {
-			...target,
-			x: target.x - cosine,
-			y: target.y - sine,
-		}
-	}
-}
-
-export function getMidPoint({ source, target }, proportion = 2) {
-	return [
-		((target.x - source.x) * (1 / proportion)) + source.x,
-		((target.y - source.y) * (1 / proportion)) + source.y,
-	]
-}
-
-export function getSine(nodeRadius, { target, source }) {
-	const angle = Math.atan2(target.y - source.y, target.x - source.x)
-	const cosine = Math.cos(angle) * nodeRadius
-	const sine = Math.sin(angle) * nodeRadius
-
-	return { sine, cosine }
-}
-
-export function generateMidPoints(count, { source, target }) {
-	const dx = target.x - source.x
-	const dy = target.y - source.y
-
-	const segmentLengthX = dx / count
-	const segmentLengthY = dy / count
-
-	const midPoints = []
-	for (let iteration = 1; iteration <= count - 1; iteration++) {
-		midPoints.push(
-			source.x + (segmentLengthX * iteration),
-			source.y + (segmentLengthY * iteration),
-		)
-	}
-
-	return midPoints
-}
-
 export function getLinkCounts(links) {
 	return links.reduce((counts, link) => {
 		counts[link.source] = counts[link.source] ?? { from: 0, to: 0 }
@@ -112,6 +54,10 @@ export function getLinkCounts(links) {
 	}, {})
 }
 
+export function toDegrees(radians) {
+	return radians * (180 / Math.PI)
+}
+
 export function clampToBoundary(nodes, size) {
 	nodes.forEach(d => {
 		d.x = max([d.x, -size])
@@ -119,19 +65,4 @@ export function clampToBoundary(nodes, size) {
 		d.x = min([d.x, size])
 		d.y = min([d.y, size])
 	})
-}
-
-export function scale({ source, target }, factor = 0.1) {
-	return {
-		source: {
-			...source,
-			x: source.x * factor,
-			y: source.y * factor,
-		},
-		target: {
-			...target,
-			x: target.x * factor,
-			y: target.y * factor,
-		}
-	}
 }
