@@ -1,18 +1,37 @@
-import {
-	toDegrees,
-} from "./utilities.js"
+import { toDegrees } from "./utilities.js"
 import "./icons.js"
-import {
-	centerNode,
-	showDetails,
-} from "./focus.js"
+import { centerNode, showDetails } from "./focus.js"
+import { polygonHull, select } from "d3"
+import { groupBy, mapValues, map, flow } from "lodash/fp"
+
+import data from "../data.json"
+const { groups: groupConfig } = data
 
 export default function render({ linkGroup, node, linkCounts, text }) {
+	addNeighborhoods(node)
 	addLink(linkGroup)
 	addMarchingAnts(linkGroup)
 
 	addCircles(node, linkCounts)
 	addTextLabel(text)
+}
+
+function addNeighborhoods(node) {
+	const nodes = node.data()
+	const groups = flow([
+		groupBy("group"),
+		mapValues(map(({ x, y }) => [x, y])),
+	])(nodes)
+
+	Object.entries(groups)
+		.forEach(([group, points]) => {
+			const hull = polygonHull(points)
+			const color = groupConfig[group].color
+			select(".bounds")
+				.append("polygon")
+				.attr("points", hull)
+				.attr("fill", color)
+		})
 }
 
 function addCircles(node, linkCounts) {

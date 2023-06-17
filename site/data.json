@@ -1,4 +1,24 @@
 {
+	"groups": {
+		"quality": {
+			"color": "hsla(120, 50%, 50%, 0.2)"
+		},
+		"storybook": {
+			"color": "hsla(300, 50%, 50%, 0.2)"
+		},
+		"typescript": {
+			"color": "hsla(0, 50%, 50%, 0.2)"
+		},
+		"jest": {
+			"color": "hsla(240, 50%, 50%, 0.2)"
+		},
+		"browser-testing": {
+			"color": "hsla(180, 50%, 50%, 0.2)"
+		},
+		"playwright": {
+			"color": "hsla(210, 50%, 50%, 0.2)"
+		}
+	},
 	"nodes": [
 		{
 			"id": "Quality",
@@ -128,11 +148,15 @@
 		},
 		{
 			"id": "React Performance Testing",
-			"group": "browser testing"
+			"group": "browser-testing"
+		},
+		{
+			"id": "Advanced Browser Dev Tools",
+			"group": "browser-testing"
 		},
 		{
 			"id": "Browser Performance Testing",
-			"group": "browser testing"
+			"group": "browser-testing"
 		},
 		{
 			"id": "Jest Sockets",

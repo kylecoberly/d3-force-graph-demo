@@ -48,7 +48,7 @@ export const {
 			},
 		},
 		group: {
-			charge: 1,
+			charge: 0.5,
 			link: {
 				strength: {
 					initial: 1,
@@ -56,7 +56,7 @@ export const {
 				},
 			},
 			distance: {
-				cutoff: 50,
+				cutoff: 30,
 				rate: 100,
 			},
 		},
