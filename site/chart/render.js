@@ -1,10 +1,11 @@
 import { toDegrees } from "./utilities.js"
 import "./icons.js"
 import { centerNode, showDetails } from "./focus.js"
-import { polygonHull, select } from "d3"
+import { select } from "d3"
 import { groupBy, mapValues, map, flow } from "lodash/fp"
 
 import data from "../data.json"
+import getSmoothHull from "./hull.js"
 const { groups: groupConfig } = data
 
 export default function render({ linkGroup, node, linkCounts, text }) {
@@ -25,11 +26,11 @@ function addNeighborhoods(node) {
 
 	Object.entries(groups)
 		.forEach(([group, points]) => {
-			const hull = polygonHull(points)
+			const hull = getSmoothHull(points, 5)
 			const color = groupConfig[group].color
 			select(".bounds")
-				.append("polygon")
-				.attr("points", hull)
+				.append("path")
+				.attr("d", hull)
 				.attr("fill", color)
 		})
 }

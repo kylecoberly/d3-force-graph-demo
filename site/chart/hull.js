@@ -13,7 +13,7 @@ export default function getSmoothHull(rawPoints, hullPadding = 60) {
 }
 
 function getHullPoints(points) {
-	return pointCount < 3 ? points : polygonHull(points)
+	return points.length < 3 ? points : polygonHull(points)
 }
 
 function createOnePointHull(point, hullPadding) {
@@ -25,7 +25,7 @@ function createOnePointHull(point, hullPadding) {
 		M ${p1}
 		A ${[hullPadding, hullPadding, '0,0,0', p2].join(',')}
 		A ${[hullPadding, hullPadding, '0,0,0', p1].join(',')}
-	`
+	`.trim()
 }
 
 function createTwoPointHull([p1, p2], hullPadding) {
@@ -53,7 +53,7 @@ function createTwoPointHull([p1, p2], hullPadding) {
 		C ${[controlPoints[0], controlPoints[1], endPoints[1]].join(',')}
 		S ${[controlPoints[2], endPoints[0]].join(',')}
 		Z
-	`
+	`.trim()
 }
 
 function createVector([x1, y1], [x2, y2], length = 1) {
@@ -84,11 +84,12 @@ function createPolyHull(points, hullPadding) {
 		.map(addVectorToPoint)
 		.map(expandPoint(hullPadding))
 
-	return createHullCurve(hullPoints)
+	const hullCurve = createHullCurve()
+	return hullCurve(hullPoints)
 }
 
 function addVectorToPoint(point, index, points) {
-	const nextPoint = points[(index + 1) % pointCount] // Returns original point at end
+	const nextPoint = points[(index + 1) % points.length] // Returns original point at end
 
 	return {
 		p: point,
@@ -98,14 +99,12 @@ function addVectorToPoint(point, index, points) {
 
 function expandPoint(hullPadding) {
 	return (point, index, points) => {
-		const previousIndex = (index > 0) ? (index - 1) : (pointCount - 1)
+		const previousIndex = (index > 0) ? (index - 1) : (points.length - 1)
 		const previousPoint = points[previousIndex]
 
-		const hullVector = createVector(
-			sumVectors(
-				previousPoint.v,
-				scaleVector(point.v, -1),
-			)
+		const hullVector = sumVectors(
+			previousPoint.v,
+			scaleVector(point.v, -1),
 		)
 
 		return {
