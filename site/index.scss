@@ -190,3 +190,30 @@ circle:not(.critical) {
 .details.open {
 	right: 0;
 }
+
+#node-filters {
+	margin-bottom: 24px;
+}
+
+#node-filters label {
+	display: block;
+	margin-bottom: 12px;
+}
+
+button {
+	background-color: $grey-9;
+	color: $grey-2;
+	border: none;
+	padding: 6px 12px;
+	box-shadow: 0 2px 2px hsl(0, 0%, 30%);
+	cursor: pointer;
+}
+
+select {
+	background-color: $grey-9;
+	color: $grey-2;
+	border: none;
+	padding: 6px 12px;
+	box-shadow: 0 2px 2px hsl(0, 0%, 30%);
+	cursor: pointer;
+}
