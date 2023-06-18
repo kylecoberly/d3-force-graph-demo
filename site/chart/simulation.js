@@ -7,46 +7,36 @@ import render from "./render.js"
 import attractGroups from "./calculations/attract-groups.js"
 import shapeLinks from "./calculations/shape-links.js"
 import { chart, simulation as simulationOptions, forces } from "./options.js"
-import data from "../data.json"
 
-const { nodes, links, groups } = data
+const linkForce = forceLink()
+	.id(({ id }) => id)
+	.distance(forces.link.distance.initial)
+	.strength(({ source, target }) => (
+		source.group === target.group
+			? forces.group.link.strength.initial
+			: forces.link.strength.initial
+	))
 
-let simulation
-
-rerun({ nodes, links, groups })
-
-export function rerun({ nodes, links, groups }) {
-	simulation = getSimulation({ nodes, links })
-	runSimulation(simulation)
+export function rerun({ simulation, nodes, links, groups }) {
+	runSimulation(simulation, { nodes, links })
 	render({ nodes, links, groups })
 }
 
-// Restart on resize
-// select(window).on("resize", () => {
-// 	simulation.restart()
-// 	render({ linkGroup, node, text, linkCounts })
-// })
-
-function getSimulation({ nodes, links }) {
+export function initializeSimulation() {
 	return forceSimulation()
-		.nodes(nodes)
 		.force("charge", forceManyBody().strength(forces.charge.initial))
 		.force("x", forceX(forces.positional.x))
 		.force("y", forceY(forces.positional.y))
 		.force("collision", forceCollide(forces.collision.initial))
-		.force("link", forceLink()
-			.id(({ id }) => id)
-			.distance(forces.link.distance.initial)
-			.strength(({ source, target }) => (
-				source.group === target.group
-					? forces.group.link.strength.initial
-					: forces.link.strength.initial
-			)).links(links)
-		).stop()
 }
 
-function runSimulation(simulation) {
+function runSimulation(simulation, { nodes, links }) {
+	simulation
+		.nodes(nodes)
+		.force("link", linkForce.links(links))
+		.stop()
 	let count = simulationOptions.tickCount
+	simulation.alpha(1).restart()
 	while (count > 0) {
 		simulation.tick()
 		update(simulation)

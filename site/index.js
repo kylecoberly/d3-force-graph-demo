@@ -1,9 +1,9 @@
 import { node } from "./chart/data.js"
 import data from "./data.json"
-export const { nodes, links, groups } = data
-import { rerun } from "./chart/simulation.js"
+const { nodes, links, groups } = data
+import { rerun, initializeSimulation } from "./chart/simulation.js"
+import { select } from "d3"
 
-// const $nodeFilters = document.querySelector("#node-filters")
 const $nodeFiltersList = document.querySelector("#node-filters-list")
 const $resetFilters = document.querySelector("#reset-filters")
 
@@ -11,6 +11,9 @@ const $allOption = document.createElement("option")
 $allOption.value = "all"
 $allOption.textContent = "All"
 $nodeFiltersList.append($allOption)
+
+const simulation = initializeSimulation()
+rerun({ simulation, nodes, links, groups })
 
 Object.values(groups)
 	.map(group => {
@@ -27,7 +30,7 @@ $resetFilters.addEventListener("click", () => {
 })
 
 $nodeFiltersList.addEventListener("input", (event) => {
-	const id = event.target.value
+	const id = event.target.value !== "all" ? event.target.value : ""
 	const filteredLinks = links.filter(({ source, target }) => [source.group, target.group].includes(id))
 	const uniqueNodeIds = Array.from(
 		(new Set(
@@ -38,13 +41,15 @@ $nodeFiltersList.addEventListener("input", (event) => {
 	)
 	const uniqueNodes = nodes.filter(node => uniqueNodeIds.includes(node.id))
 
-	if (groups[id]) {
-		rerun({
-			nodes: uniqueNodes,
-			links: filteredLinks,
-			groups: Object.values(groups).filter((group) => group.id === id)
-		})
-	} else {
-		rerun({ nodes, links, groups })
-	}
+	rerun({
+		simulation,
+		nodes: uniqueNodes,
+		links: filteredLinks,
+		groups: Object.values(groups).filter((group) => group.id === id)
+	})
+})
+
+select(window).on("resize", () => {
+	simulation.restart()
+	rerun({ simulation, nodes, links, groups })
 })

@@ -1,61 +1,96 @@
-import { bounds } from "./chart.js"
 import { getLinkCounts, getCentroids, toDegrees } from "./utilities.js"
 import "./icons.js"
 import { centerNode, showDetails } from "./focus.js"
 import data from "../data.json"
 const { groups: groupData } = data
 import getSmoothHull from "./hull.js"
+import { select } from "d3"
+
+const node = select(".bounds").selectAll(".node")
+const group = select(".bounds").selectAll(".domain")
+const link = select(".bounds").selectAll(".link")
 
 export default function render({ groups, nodes, links }) {
-	const linkGroup = bounds
-		.selectAll(".link")
-		// .data(links, ({ source, target }) => `${source.id}-${target.id}`)
-		.data(links, d => d.id)
+	const groupCenters = getCentroids(nodes)
+	const l = link
+		.data(links, ({ source, target }) => `${source}-${target}`)
 		.join("g")
 		.classed("link", true)
 
-	const node = bounds
-		.selectAll(".node")
+	const n = node
 		.data(nodes, d => d.id)
-		.join("g")
-		.classed("node", true)
+		.join(
+			enter => enter
+				.append("g")
+				.classed("node", true)
+				.transition()
+				.duration(1000)
+				.selection(),
+			update => update
+				.transition()
+				.duration(1000)
+				.attr("transform", (d) => `translate(${d.x},${d.y})`)
+				.selection(),
+			exit => exit
+				.transition()
+				.duration(100)
+				.remove(),
+		)
 
-	const text = node
+	const text = n
 		.append("text")
 		.classed("label", true)
 
-	const group = bounds
-		.selectAll(".domain")
+	const g = group
 		.data(Object.values(groups), d => d.id)
-		.join("g")
-		.classed("domain", true)
+		.join(
+			enter => enter
+				.append("g")
+				.classed("domain", true)
+				.each(d => {
+					d.center = groupCenters[d.id]
+					d.points = nodes
+						.filter(node => node.group === d.id)
+						.map(({ x, y }) => [x, y])
+				})
+				.lower()
+				.transition()
+				.duration(1000)
+				.selection(),
+			update => update
+				.each(d => {
+					d.center = groupCenters[d.id]
+					d.points = nodes
+						.filter(node => node.group === d.id)
+						.map(({ x, y }) => [x, y])
+				})
+				.transition()
+				.duration(1000)
+				.attr("transform", (d) => `translate(${d.center.x},${d.center.y})`)
+				.selection(),
+			exit => {
+				return exit.remove()
+			},
+
+		)
 
 	const linkCounts = getLinkCounts(links)
 
-	addNeighborhoods({ nodes, group })
-	addLink(linkGroup)
-	addMarchingAnts(linkGroup)
+	addNeighborhoods(g)
+	addLink(l)
+	addMarchingAnts(l)
 
-	addCircles(node, linkCounts)
+	addCircles(n, linkCounts)
 	addTextLabel(text)
 }
 
-function addNeighborhoods({ nodes, group }) {
-	const groupCenters = getCentroids(nodes)
-
-	const groupWithCenter = group.each(d => {
-		d.center = groupCenters[d.id]
-		d.points = nodes
-			.filter(node => node.group === d.id)
-			.map(({ x, y }) => [x, y])
-	}).lower()
-
-	groupWithCenter
+function addNeighborhoods(group) {
+	group
 		.append("path")
 		.attr("d", d => getSmoothHull(d.points, 5))
 		.attr("fill", d => groupData[d.id]["background-color"])
 
-	groupWithCenter
+	group
 		.append("text")
 		.classed("group-label", true)
 		.attr("x", d => Math.round(d.center.x))
@@ -72,7 +107,6 @@ function addCircles(node, linkCounts) {
 	}
 
 	node
-		.append("g")
 		.classed("open", (d) => linkCounts[d.id]?.to === 0)
 		.classed("closed", (d) => linkCounts[d.id]?.to !== 0)
 		.classed("completed", (d) => d.complete)
