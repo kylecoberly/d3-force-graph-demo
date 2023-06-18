@@ -1,13 +1,38 @@
-import { getCentroids, toDegrees } from "./utilities.js"
+import { bounds } from "./chart.js"
+import { getLinkCounts, getCentroids, toDegrees } from "./utilities.js"
 import "./icons.js"
 import { centerNode, showDetails } from "./focus.js"
-import { select } from "d3"
-import { groupBy, toPairs, mapValues, map, flow, forEach } from "lodash/fp"
 import data from "../data.json"
+const { groups: groupData } = data
 import getSmoothHull from "./hull.js"
 
-export default function render({ linkGroup, node, linkCounts, text }) {
-	addNeighborhoods(node)
+export default function render({ groups, nodes, links }) {
+	const linkGroup = bounds
+		.selectAll(".link")
+		// .data(links, ({ source, target }) => `${source.id}-${target.id}`)
+		.data(links, d => d.id)
+		.join("g")
+		.classed("link", true)
+
+	const node = bounds
+		.selectAll(".node")
+		.data(nodes, d => d.id)
+		.join("g")
+		.classed("node", true)
+
+	const text = node
+		.append("text")
+		.classed("label", true)
+
+	const group = bounds
+		.selectAll(".domain")
+		.data(Object.values(groups), d => d.id)
+		.join("g")
+		.classed("domain", true)
+
+	const linkCounts = getLinkCounts(links)
+
+	addNeighborhoods({ nodes, group })
 	addLink(linkGroup)
 	addMarchingAnts(linkGroup)
 
@@ -15,38 +40,29 @@ export default function render({ linkGroup, node, linkCounts, text }) {
 	addTextLabel(text)
 }
 
-function addNeighborhoods(node) {
-	const groupCenters = getCentroids(node.data())
-	flow([
-		groupBy("group"),
-		mapValues((nodes) => ({
-			center: groupCenters[nodes[0].group],
-			points: map(
-				({ x, y }) => [x, y]
-			)(nodes),
-		})),
-		toPairs,
-		forEach(([group, { center, points }]) => {
-			const { groups: groupData } = data
-			const bounds = select(".bounds")
+function addNeighborhoods({ nodes, group }) {
+	const groupCenters = getCentroids(nodes)
 
-			bounds
-				.append("path")
-				.attr("d", getSmoothHull(points, 5))
-				.attr("fill", groupData[group]["background-color"])
-				.lower()
+	const groupWithCenter = group.each(d => {
+		d.center = groupCenters[d.id]
+		d.points = nodes
+			.filter(node => node.group === d.id)
+			.map(({ x, y }) => [x, y])
+	}).lower()
 
-			bounds
-				.append("text")
-				.classed("group-label", true)
-				.attr("x", Math.round(center.x))
-				.attr("y", Math.round(center.y))
-				.attr("text-anchor", "middle")
-				.attr("fill", groupData[group]["foreground-color"])
-				.text(groupData[group].label)
-				.lower()
-		}),
-	])(node.data())
+	groupWithCenter
+		.append("path")
+		.attr("d", d => getSmoothHull(d.points, 5))
+		.attr("fill", d => groupData[d.id]["background-color"])
+
+	groupWithCenter
+		.append("text")
+		.classed("group-label", true)
+		.attr("x", d => Math.round(d.center.x))
+		.attr("y", d => Math.round(d.center.y))
+		.attr("text-anchor", "middle")
+		.attr("fill", d => groupData[d.id]["foreground-color"])
+		.text(d => groupData[d.id].label)
 }
 
 function addCircles(node, linkCounts) {

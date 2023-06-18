@@ -1,31 +1,37 @@
 {
 	"groups": {
 		"quality": {
+			"id": "quality",
 			"label": "Quality",
 			"background-color": "hsla(120, 50%, 50%, 0.1)",
 			"foreground-color": "hsla(120, 50%, 50%, 0.4)"
 		},
 		"storybook": {
+			"id": "storybook",
 			"label": "Storybook",
 			"background-color": "hsla(300, 50%, 50%, 0.1)",
 			"foreground-color": "hsla(300, 50%, 50%, 0.4)"
 		},
 		"typescript": {
+			"id": "typescript",
 			"label": "TypeScript",
 			"background-color": "hsla(0, 50%, 50%, 0.1)",
 			"foreground-color": "hsla(0, 50%, 50%, 0.4)"
 		},
 		"jest": {
+			"id": "jest",
 			"label": "Jest",
 			"background-color": "hsla(240, 50%, 50%, 0.1)",
 			"foreground-color": "hsla(240, 50%, 50%, 0.4)"
 		},
 		"browser-testing": {
+			"id": "browser-testing",
 			"label": "Browser Testing",
 			"background-color": "hsla(180, 50%, 50%, 0.1)",
 			"foreground-color": "hsla(180, 50%, 50%, 0.4)"
 		},
 		"playwright": {
+			"id": "playwright",
 			"label": "Playwright",
 			"background-color": "hsla(210, 50%, 50%, 0.1)",
 			"foreground-color": "hsla(210, 50%, 50%, 0.4)"

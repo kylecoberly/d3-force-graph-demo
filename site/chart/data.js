@@ -4,9 +4,6 @@ export const { nodes, links } = data
 
 export const node = bounds
 	.selectAll(".node")
-	.data(nodes)
-	.join("g")
-	.classed("node", true)
 
 export const text = node
 	.append("text")
@@ -14,5 +11,3 @@ export const text = node
 
 export const linkGroup = bounds
 	.selectAll(".link")
-	.data(links)
-	.join("g")

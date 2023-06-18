@@ -2,26 +2,30 @@ import {
 	forceSimulation, forceManyBody, forceX, forceY,
 	forceCollide, forceLink, select
 } from "d3"
-import {
-	nodes, links, linkGroup, text, node
-} from "./data.js"
-import { getLinkCounts, clampToBoundary } from "./utilities.js"
+import { clampToBoundary } from "./utilities.js"
 import render from "./render.js"
 import attractGroups from "./calculations/attract-groups.js"
 import shapeLinks from "./calculations/shape-links.js"
-
 import { chart, simulation as simulationOptions, forces } from "./options.js"
+import data from "../data.json"
 
-const linkCounts = getLinkCounts(links)
-const simulation = getSimulation({ nodes, links })
-runSimulation(simulation)
-render({ linkGroup, node, text, linkCounts })
+const { nodes, links, groups } = data
+
+let simulation
+
+rerun({ nodes, links, groups })
+
+export function rerun({ nodes, links, groups }) {
+	simulation = getSimulation({ nodes, links })
+	runSimulation(simulation)
+	render({ nodes, links, groups })
+}
 
 // Restart on resize
-select(window).on("resize", () => {
-	simulation.restart()
-	render({ linkGroup, node, text, linkCounts })
-})
+// select(window).on("resize", () => {
+// 	simulation.restart()
+// 	render({ linkGroup, node, text, linkCounts })
+// })
 
 function getSimulation({ nodes, links }) {
 	return forceSimulation()
@@ -51,8 +55,8 @@ function runSimulation(simulation) {
 }
 
 function update(simulation) {
-	const nodes = simulation.nodes()
 	const alpha = simulation.alpha()
+	const nodes = simulation.nodes()
 
 	attractGroups(nodes, alpha, {
 		alphaCutoff: simulationOptions.alphaCutoff,
