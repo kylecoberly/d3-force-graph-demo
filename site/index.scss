@@ -97,6 +97,11 @@ body {
 	stroke-width: 1px;
 }
 
+.group-label {
+	font-size: 0.2em;
+	stroke-width: 1px;
+}
+
 .node {
 	cursor: pointer;
 }
@@ -129,19 +134,13 @@ body {
 
 #container {
 	border: 1px solid red;
-	// width: 80%;
-	// max-height: 800px;
-	// overflow: hidden;
+	overflow: hidden;
 	position: relative;
 }
 
 #circle {
 	fill: #ccc;
 	stroke-width: 1px;
-}
-
-.bounds {
-	border: 1px solid blue;
 }
 
 .closed {

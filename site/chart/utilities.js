@@ -3,7 +3,7 @@ import { min, max } from "d3"
 export function getCentroids(nodes) {
 	const groupCoordinates = getGroupCoordinates(nodes)
 
-	return Object
+	const centroids = Object
 		.entries(groupCoordinates)
 		.reduce((centroids, [group, coordinates]) => {
 			const count = coordinates.length;
@@ -22,6 +22,8 @@ export function getCentroids(nodes) {
 
 			return centroids
 		}, {})
+
+	return centroids
 }
 
 export function getGroupCoordinates(nodes) {

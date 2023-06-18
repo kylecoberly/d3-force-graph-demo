@@ -1,12 +1,10 @@
-import { toDegrees } from "./utilities.js"
+import { getCentroids, toDegrees } from "./utilities.js"
 import "./icons.js"
 import { centerNode, showDetails } from "./focus.js"
 import { select } from "d3"
-import { groupBy, mapValues, map, flow } from "lodash/fp"
-
+import { groupBy, toPairs, mapValues, map, flow, forEach } from "lodash/fp"
 import data from "../data.json"
 import getSmoothHull from "./hull.js"
-const { groups: groupConfig } = data
 
 export default function render({ linkGroup, node, linkCounts, text }) {
 	addNeighborhoods(node)
@@ -18,21 +16,37 @@ export default function render({ linkGroup, node, linkCounts, text }) {
 }
 
 function addNeighborhoods(node) {
-	const nodes = node.data()
-	const groups = flow([
+	const groupCenters = getCentroids(node.data())
+	flow([
 		groupBy("group"),
-		mapValues(map(({ x, y }) => [x, y])),
-	])(nodes)
+		mapValues((nodes) => ({
+			center: groupCenters[nodes[0].group],
+			points: map(
+				({ x, y }) => [x, y]
+			)(nodes),
+		})),
+		toPairs,
+		forEach(([group, { center, points }]) => {
+			const { groups: groupData } = data
+			const bounds = select(".bounds")
 
-	Object.entries(groups)
-		.forEach(([group, points]) => {
-			const hull = getSmoothHull(points, 5)
-			const color = groupConfig[group].color
-			select(".bounds")
+			bounds
 				.append("path")
-				.attr("d", hull)
-				.attr("fill", color)
-		})
+				.attr("d", getSmoothHull(points, 5))
+				.attr("fill", groupData[group]["background-color"])
+				.lower()
+
+			bounds
+				.append("text")
+				.classed("group-label", true)
+				.attr("x", Math.round(center.x))
+				.attr("y", Math.round(center.y))
+				.attr("text-anchor", "middle")
+				.attr("fill", groupData[group]["foreground-color"])
+				.text(groupData[group].label)
+				.lower()
+		}),
+	])(node.data())
 }
 
 function addCircles(node, linkCounts) {

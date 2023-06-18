@@ -26,8 +26,7 @@ export function showDetails(d) {
 }
 
 export function centerNode(x, y) {
-	const transform = zoomIdentity.translate(-x, -y).scale(scale)
-
+	const transform = zoomIdentity.scale(scale).translate(-x, -y)
 	svg
 		.transition()
 		.duration(duration)
