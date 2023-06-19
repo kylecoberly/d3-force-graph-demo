@@ -6,42 +6,46 @@ const { groups: groupData } = data
 import getSmoothHull from "./hull.js"
 import { select } from "d3"
 
-const node = select(".bounds").selectAll(".node")
-const group = select(".bounds").selectAll(".domain")
-const link = select(".bounds").selectAll(".link")
-
 export default function render({ groups, nodes, links }) {
 	const groupCenters = getCentroids(nodes)
-	const l = link
-		.data(links, ({ source, target }) => `${source}-${target}`)
-		.join("g")
-		.classed("link", true)
 
-	const n = node
+	select(".bounds")
+		.selectAll(".link")
+		.data(links, ({ source, target }) => `${source}-${target}`)
+		.join(
+			enter => enter
+				.append("g")
+				.classed("link", true)
+				.call(addLink)
+				.call(addMarchingAnts),
+			update => update
+				.transition()
+				.duration(1000)
+				// This line is a placeholder:
+				.attr("transform", ({ source, target }) => `translate(${source.x},${target.y})`),
+			exit => exit
+				.remove()
+		)
+
+	select(".bounds").selectAll(".node")
 		.data(nodes, d => d.id)
 		.join(
 			enter => enter
 				.append("g")
 				.classed("node", true)
-				.transition()
-				.duration(1000)
-				.selection(),
+				.call(addCircles, links)
+				.append("text")
+				.classed("label", true)
+				.call(addTextLabel),
 			update => update
 				.transition()
 				.duration(1000)
-				.attr("transform", (d) => `translate(${d.x},${d.y})`)
-				.selection(),
+				.attr("transform", (d) => `translate(${d.x},${d.y})`),
 			exit => exit
-				.transition()
-				.duration(100)
 				.remove(),
 		)
 
-	const text = n
-		.append("text")
-		.classed("label", true)
-
-	const g = group
+	select(".bounds").selectAll(".domain")
 		.data(Object.values(groups), d => d.id)
 		.join(
 			enter => enter
@@ -53,10 +57,8 @@ export default function render({ groups, nodes, links }) {
 						.filter(node => node.group === d.id)
 						.map(({ x, y }) => [x, y])
 				})
-				.lower()
-				.transition()
-				.duration(1000)
-				.selection(),
+				.call(addNeighborhoods)
+				.lower(),
 			update => update
 				.each(d => {
 					d.center = groupCenters[d.id]
@@ -66,22 +68,11 @@ export default function render({ groups, nodes, links }) {
 				})
 				.transition()
 				.duration(1000)
-				.attr("transform", (d) => `translate(${d.center.x},${d.center.y})`)
-				.selection(),
+				.attr("transform", (d) => `translate(${d.center.x},${d.center.y})`),
 			exit => {
 				return exit.remove()
 			},
-
 		)
-
-	const linkCounts = getLinkCounts(links)
-
-	addNeighborhoods(g)
-	addLink(l)
-	addMarchingAnts(l)
-
-	addCircles(n, linkCounts)
-	addTextLabel(text)
 }
 
 function addNeighborhoods(group) {
@@ -100,7 +91,8 @@ function addNeighborhoods(group) {
 		.text(d => groupData[d.id].label)
 }
 
-function addCircles(node, linkCounts) {
+function addCircles(node, links) {
+	const linkCounts = getLinkCounts(links)
 	const offset = {
 		x: 2,
 		y: 2,

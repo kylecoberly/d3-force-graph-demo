@@ -48,10 +48,10 @@ export function getDistance({ x: x1, y: y1 }, { x: x2, y: y2 }) {
 
 export function getLinkCounts(links) {
 	return links.reduce((counts, link) => {
-		counts[link.source] = counts[link.source] ?? { from: 0, to: 0 }
-		counts[link.target] = counts[link.target] ?? { from: 0, to: 0 }
-		counts[link.source].from = counts[link.source].from + 1
-		counts[link.target].to = counts[link.target].to + 1
+		counts[link.source.id] = counts[link.source.id] || { from: 0, to: 0 }
+		counts[link.target.id] = counts[link.target.id] || { from: 0, to: 0 }
+		counts[link.source.id].from = counts[link.source.id].from + 1
+		counts[link.target.id].to = counts[link.target.id].to + 1
 		return counts
 	}, {})
 }

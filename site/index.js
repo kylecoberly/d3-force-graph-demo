@@ -30,22 +30,27 @@ $resetFilters.addEventListener("click", () => {
 })
 
 $nodeFiltersList.addEventListener("input", (event) => {
-	const id = event.target.value !== "all" ? event.target.value : ""
-	const filteredLinks = links.filter(({ source, target }) => [source.group, target.group].includes(id))
+	const id = event.target.value
+	const normalizedLinks = id === "all"
+		? links
+		: links.filter(({ source, target }) => [source.group, target.group].includes(id))
 	const uniqueNodeIds = Array.from(
 		(new Set(
-			filteredLinks.flatMap(({ source, target }) => (
+			normalizedLinks.flatMap(({ source, target }) => (
 				[source.id, target.id]
 			))
 		))
 	)
 	const uniqueNodes = nodes.filter(node => uniqueNodeIds.includes(node.id))
+	const normalizedGroups = id === "all"
+		? groups
+		: Object.values(groups).filter((group) => group.id === id)
 
 	rerun({
 		simulation,
 		nodes: uniqueNodes,
-		links: filteredLinks,
-		groups: Object.values(groups).filter((group) => group.id === id)
+		links: normalizedLinks,
+		groups: normalizedGroups,
 	})
 })
 
