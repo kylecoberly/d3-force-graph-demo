@@ -6,9 +6,9 @@ export const {
 	forces,
 } = {
 	chart: {
-		height: window.innerHeight * 1,
-		width: window.innerWidth * 1,
-		boundary: window.innerWidth,
+		height: 600,//window.innerHeight * 0.8,
+		width: 1000,//window.innerWidth * 0.8,
+		boundary: 400,//window.innerWidth * 0.7,
 	},
 	zoom: {
 		initial: 4,
