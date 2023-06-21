@@ -2,7 +2,7 @@ import data from "./data.json"
 const { nodes, links, groups } = data
 import { renderSimulation, initializeSimulation } from "./chart/simulation/simulation.js"
 import { resetZoom } from "./chart/rendering/chart.js"
-import { select, selectAll } from "d3"
+import { select } from "d3"
 
 const $nodeFiltersList = document.querySelector("#node-filters-list")
 const $resetFilters = document.querySelector("#reset-filters")
@@ -26,11 +26,14 @@ Object.values(groups)
 	})
 
 $resetFilters.addEventListener("click", () => {
-	selectAll(".node").data(nodes)
+	rerender("all")
 })
 
 $nodeFiltersList.addEventListener("input", (event) => {
-	const id = event.target.value
+	rerender(event.target.value)
+})
+
+function rerender(id) {
 	const normalizedLinks = id === "all"
 		? links
 		: links.filter(({ source, target }) => [source.group, target.group].includes(id))
@@ -44,7 +47,7 @@ $nodeFiltersList.addEventListener("input", (event) => {
 	const uniqueNodes = nodes.filter(node => uniqueNodeIds.includes(node.id))
 	const normalizedGroups = id === "all"
 		? groups
-		: Object.values(groups).filter((group) => group.id === id)
+		: { [id]: groups[id] }
 
 	renderSimulation({
 		simulation,
@@ -52,7 +55,7 @@ $nodeFiltersList.addEventListener("input", (event) => {
 		links: normalizedLinks,
 		groups: normalizedGroups,
 	})
-})
+}
 
 select(window).on("resize", () => {
 	resetZoom(window.innerWidth)

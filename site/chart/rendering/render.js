@@ -9,6 +9,7 @@ import {
 	addGroups,
 	addLabel,
 } from "./elements"
+import getSmoothHull from "../simulation/hull.js"
 
 export default function render({ groups, nodes, links }) {
 	select(".bounds").selectAll(".link")
@@ -20,12 +21,16 @@ export default function render({ groups, nodes, links }) {
 				.call(addLink)
 				.call(addArrows),
 			update => update
+				.selectAll(".link")
 				.transition()
 				.duration(1000)
-				// This line is a placeholder:
-				.attr("transform", ({ source, target }) => `translate(${source.x},${target.y})`),
-			exit => exit.remove()
+				.attr("d", ({ source, target }) => `M${source.x},${source.y} ${target.x},${target.y}`),
+			exit => exit.remove(),
 		)
+	const offset = {
+		x: 2,
+		y: 2,
+	}
 
 	select(".bounds").selectAll(".node")
 		.data(nodes, ({ id }) => id)
@@ -37,9 +42,20 @@ export default function render({ groups, nodes, links }) {
 				.call(addNodes, links)
 				.call(addLabel),
 			update => update
-				.transition()
-				.duration(1000)
-				.attr("transform", ({ x, y }) => `translate(${x},${y})`),
+				.call(node => {
+					node.select("text")
+						.transition()
+						.duration(1000)
+						.attr("x", ({ x }) => Math.round(x + offset.x))
+						.attr("y", ({ y }) => Math.round(y + offset.y))
+				})
+				.call(node => {
+					node.select("use")
+						.transition()
+						.duration(1000)
+						.attr("x", ({ x }) => Math.round(x - offset.x))
+						.attr("y", ({ y }) => Math.round(y - offset.y))
+				}),
 			exit => exit.remove(),
 		)
 
@@ -59,15 +75,25 @@ export default function render({ groups, nodes, links }) {
 				.call(addGroups, groups)
 				.lower(),
 			update => update
-				.each(({ id }) => {
-					center = groupCenters[id]
-					points = nodes
-						.filter(node => node.group === id)
+				.each((d) => {
+					d.center = groupCenters[d.id]
+					d.points = nodes
+						.filter(node => node.group === d.id)
 						.map(({ x, y }) => [x, y])
 				})
-				.transition()
-				.duration(1000)
-				.attr("transform", ({ center }) => `translate(${center.x},${center.y})`),
+				.call(group => {
+					group.select("path")
+						.transition()
+						.duration(1000)
+						.attr("d", ({ points }) => getSmoothHull(points, 5))
+				})
+				.call(group => {
+					group.select("text")
+						.transition()
+						.duration(1000)
+						.attr("x", ({ center }) => Math.round(center.x))
+						.attr("y", ({ center }) => Math.round(center.y))
+				}),
 			exit => exit.remove(),
 		)
 }

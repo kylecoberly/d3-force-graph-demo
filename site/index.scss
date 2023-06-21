@@ -102,8 +102,13 @@ body {
 	stroke-width: 1px;
 }
 
+.domain {
+	opacity: 0;
+}
+
 .node {
 	cursor: pointer;
+	opacity: 0;
 }
 
 .arrow {

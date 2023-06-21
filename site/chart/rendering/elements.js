@@ -4,6 +4,11 @@ import getSmoothHull from "../simulation/hull.js"
 
 export function addGroups(group, groups) {
 	group
+		.transition()
+		.duration(1000)
+		.style("opacity", 1)
+
+	group
 		.append("path")
 		.attr("d", ({ points }) => getSmoothHull(points, 5))
 		.attr("fill", ({ id }) => groups[id]["background-color"])
@@ -13,8 +18,8 @@ export function addGroups(group, groups) {
 		.classed("group-label", true)
 		.attr("x", ({ center }) => Math.round(center.x))
 		.attr("y", ({ center }) => Math.round(center.y))
-		.attr("text-anchor", "middle")
 		.attr("fill", ({ id }) => groups[id]["foreground-color"])
+		.attr("text-anchor", "middle")
 		.text(({ id }) => groups[id].label)
 }
 
@@ -31,6 +36,9 @@ export function addNodes(node, links) {
 			centerNode(d.x, d.y)
 			showDetails(d)
 		})
+		.transition()
+		.duration(1000)
+		.style("opacity", 1)
 }
 
 export function addCircle(node) {
@@ -46,6 +54,9 @@ export function addCircle(node) {
 		.attr("x", ({ x }) => Math.round(x - offset.x))
 		.attr("y", ({ y }) => Math.round(y - offset.y))
 		.attr("href", "#circle")
+		.transition()
+		.duration(1000)
+		.style("opacity", 1)
 }
 
 export function addLabel(node) {
@@ -61,6 +72,9 @@ export function addLabel(node) {
 		.attr("y", ({ y }) => Math.round(y + offset.y))
 		.attr("text-anchor", "middle")
 		.text(({ id }) => id)
+		.transition()
+		.duration(1000)
+		.style("opacity", 1)
 }
 
 export function addLink(link) {
@@ -69,6 +83,9 @@ export function addLink(link) {
 		.classed("link", true)
 		.attr("id", ({ source, target }) => `link-${source.id}${target.id}`.replaceAll(" ", ""))
 		.attr("d", ({ source, target }) => `M${source.x},${source.y} ${target.x},${target.y}`)
+		.transition()
+		.duration(1000)
+		.style("opacity", 1)
 }
 
 export function addArrows(link) {
@@ -79,16 +96,21 @@ export function addArrows(link) {
 		.attr("width", 2)
 		.attr("height", 2)
 		.classed("ant", true)
+		.transition()
+		.duration(1000)
 		.attr("transform", ({ target, source }) => {
 			const dx = target.x - source.x
 			const dy = target.y - source.y
 			const angle = toDegrees(Math.atan2(dy, dx))
 			return `rotate(${angle}) translate(0, -1)`
 		})
+		.selection()
 		.append("animateMotion")
 		.attr("dur", "0.5s")
 		.attr("repeatCount", "indefinite")
 		.append("mpath")
+		.transition()
+		.duration(1000)
 		.attr("href", ({ source, target }) => {
 			const id = `${source.id}${target.id}`.replaceAll(" ", "")
 			return `#link-${id}`

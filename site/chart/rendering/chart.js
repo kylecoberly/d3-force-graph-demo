@@ -3,7 +3,7 @@ import options from "./options.js"
 import { addArrow, addCircle } from "./icons.js"
 
 const {
-	chart: { width, height },
+	chart: { width, height, resetScalingFactor },
 	zoom: {
 		initialScale,
 		initialCoordinates,
@@ -52,9 +52,8 @@ function initializeZoom(svg) {
 }
 
 export function resetZoom(currentWidth) {
-	const scalingFactor = 5
 	const widthRatio = currentWidth / width
-	const newScale = widthRatio * (scalingFactor)
+	const newScale = widthRatio * (resetScalingFactor)
 	const initialTransform = zoomIdentity
 		.scale(newScale)
 
