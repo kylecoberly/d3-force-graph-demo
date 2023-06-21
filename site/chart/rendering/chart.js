@@ -1,17 +1,32 @@
-import { select, zoomIdentity, zoom } from "d3"
-import { attachZoom } from "./zoom.js"
+import { select, zoomIdentity, zoom as Zoom, interpolate } from "d3"
 import { chart, focus, zoom as zoomOptions } from "./options.js"
+import { addArrow, addCircle } from "./icons.js"
 
 const {
 	height,
 	width,
 } = chart
 const {
+	initialScale,
+	initialCoordinates,
+	minimum,
+	maximum,
+	constraintFactor,
+} = zoomOptions
+const {
 	duration,
 	scale,
 } = focus
 
-select("#container")
+const zoom = Zoom()
+	.interpolate(interpolate)
+	.scaleExtent([minimum, maximum])
+	.translateExtent([
+		[width / -constraintFactor, height / -constraintFactor],
+		[width / constraintFactor, height / constraintFactor]
+	])
+
+const svg = select("#container")
 	.append("svg")
 	.attr("preserveAspectRatio", "xMinYMin meet")
 	.attr("viewBox", [width / -2, height / -2, width, height])
@@ -23,8 +38,34 @@ select("#container")
 	.classed("bounds", true)
 	.attr("width", `${width}`)
 	.attr("height", `${height}`)
+	.call(listenForZoom)
 
-attachZoom({ bounds })
+const defs = svg.append("defs")
+addArrow(defs)
+addCircle(defs)
+
+
+function attachZoom(svg) {
+	const { x, y } = initialCoordinates
+
+	svg
+		.call(zoom)
+		.call(
+			zoom.transform,
+			zoomIdentity
+				.translate(x, y)
+				.scale(initialScale)
+		)
+}
+
+function listenForZoom(bounds) {
+	bounds
+		.call(() => {
+			zoom.on("zoom", ({ transform }) => {
+				bounds.attr("transform", transform)
+			})
+		})
+}
 
 function attachFocus(svg) {
 	svg
@@ -36,28 +77,19 @@ function attachFocus(svg) {
 		})
 }
 
-function attachZoom({ bounds }) {
-	svg
-		.call(zoom)
-		.call(() => {
-			zoom.on("zoom", ({ transform }) => {
-				bounds.attr("transform", transform)
-			})
-		})
-		.call(
-			zoom.transform,
-			zoomIdentity
-				.translate(0, 0)
-				.scale(initial)
-		)
+export function centerNode(x, y) {
+	const transform = zoomIdentity.scale(scale).translate(-x, -y)
+	select("#container svg")
+		.transition()
+		.duration(duration)
+		.call(zoom.transform, transform)
 }
-export const zoom = Zoom()
-	.interpolate(interpolate)
-	.scaleExtent([minimum, maximum])
-	.translateExtent([
-		[
-			width / -constraintFactor, height / -constraintFactor
-		], [
-			width / constraintFactor, height / constraintFactor
-		]
-	])
+
+export function showDetails({ id }) {
+	select("#container .details")
+		.classed("open", true)
+		.html(`
+			<h2>${id}</h2>
+			<p>${id}</p>
+		`)
+}

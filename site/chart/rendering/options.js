@@ -9,7 +9,8 @@ export const {
 		boundary: 400,//window.innerWidth * 0.7,
 	},
 	zoom: {
-		initial: 4,
+		initialScale: 4,
+		initialCoordinates: { x: 0, y: 0 },
 		minimum: 4,
 		maximum: 30,
 		constraintFactor: 7,

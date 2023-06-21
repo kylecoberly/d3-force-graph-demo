@@ -1,8 +1,7 @@
-import { node } from "./chart/data.js"
 import data from "./data.json"
 const { nodes, links, groups } = data
-import { rerun, initializeSimulation } from "./chart/simulation.js"
-import { select } from "d3"
+import { rerun, initializeSimulation } from "./chart/simulation/simulation.js"
+import { select, selectAll } from "d3"
 
 const $nodeFiltersList = document.querySelector("#node-filters-list")
 const $resetFilters = document.querySelector("#reset-filters")
@@ -14,6 +13,8 @@ $nodeFiltersList.append($allOption)
 
 const simulation = initializeSimulation()
 rerun({ simulation, nodes, links, groups })
+
+const node = selectAll(".node")
 
 Object.values(groups)
 	.map(group => {

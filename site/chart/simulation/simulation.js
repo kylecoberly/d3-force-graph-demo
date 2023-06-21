@@ -1,12 +1,13 @@
 import {
 	forceSimulation, forceManyBody, forceX, forceY,
-	forceCollide, forceLink, select
+	forceCollide, forceLink
 } from "d3"
-import { clampToBoundary } from "./utilities.js"
-import render from "./render.js"
-import attractGroups from "./calculations/attract-groups.js"
-import shapeLinks from "./calculations/shape-links.js"
-import { chart, simulation as simulationOptions, forces } from "./options.js"
+import { clampToBoundary } from "../utilities.js"
+import render from "../rendering/render.js"
+import attractGroups from "./attract-groups.js"
+import shapeLinks from "./shape-links.js"
+import { simulation as simulationOptions, forces } from "./options.js"
+import { chart } from "../rendering/options.js"
 
 const linkForce = forceLink()
 	.id(({ id }) => id)

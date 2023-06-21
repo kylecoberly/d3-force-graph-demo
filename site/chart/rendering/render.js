@@ -1,128 +1,132 @@
 import { select } from "d3"
 import "./icons.js"
-import { centerNode, showDetails } from "./focus.js"
+import { centerNode, showDetails } from "./chart.js"
 import { getLinkCounts, getCentroids, toDegrees } from "../utilities.js"
-import data from "../../data.json"
 import getSmoothHull from "../simulation/hull.js"
 
+import data from "../../data.json"
 const { groups: groupData } = data
 
 export default function render({ groups, nodes, links }) {
-	const groupCenters = getCentroids(nodes)
-
-	select(".bounds")
-		.selectAll(".link")
+	select(".bounds").selectAll(".link")
 		.data(links, ({ source, target }) => `${source}-${target}`)
 		.join(
 			enter => enter
 				.append("g")
 				.classed("link", true)
 				.call(addLink)
-				.call(addMarchingAnts),
+				.call(addArrows),
 			update => update
 				.transition()
 				.duration(1000)
 				// This line is a placeholder:
 				.attr("transform", ({ source, target }) => `translate(${source.x},${target.y})`),
-			exit => exit
-				.remove()
+			exit => exit.remove()
 		)
 
 	select(".bounds").selectAll(".node")
-		.data(nodes, d => d.id)
+		.data(nodes, ({ id }) => id)
 		.join(
 			enter => enter
 				.append("g")
 				.classed("node", true)
-				.call(addCircles, links)
-				.append("text")
-				.classed("label", true)
-				.call(addTextLabel),
+				.call(addCircle)
+				.call(addNodes, links)
+				.call(addLabel),
 			update => update
 				.transition()
 				.duration(1000)
-				.attr("transform", (d) => `translate(${d.x},${d.y})`),
-			exit => exit
-				.remove(),
+				.attr("transform", ({ x, y }) => `translate(${x},${y})`),
+			exit => exit.remove(),
 		)
 
+	const groupCenters = getCentroids(nodes)
 	select(".bounds").selectAll(".domain")
-		.data(Object.values(groups), d => d.id)
+		.data(Object.values(groups), ({ id }) => id)
 		.join(
 			enter => enter
 				.append("g")
 				.classed("domain", true)
-				.each(d => {
+				.each((d) => {
 					d.center = groupCenters[d.id]
 					d.points = nodes
 						.filter(node => node.group === d.id)
 						.map(({ x, y }) => [x, y])
 				})
-				.call(addNeighborhoods)
+				.call(addGroups)
 				.lower(),
 			update => update
-				.each(d => {
-					d.center = groupCenters[d.id]
-					d.points = nodes
-						.filter(node => node.group === d.id)
+				.each(({ center, points, id }) => {
+					center = groupCenters[id]
+					points = nodes
+						.filter(node => node.group === id)
 						.map(({ x, y }) => [x, y])
 				})
 				.transition()
 				.duration(1000)
-				.attr("transform", (d) => `translate(${d.center.x},${d.center.y})`),
-			exit => {
-				return exit.remove()
-			},
+				.attr("transform", ({ center }) => `translate(${center.x},${center.y})`),
+			exit => exit.remove(),
 		)
 }
 
-function addNeighborhoods(group) {
+function addGroups(group) {
 	group
 		.append("path")
-		.attr("d", d => getSmoothHull(d.points, 5))
-		.attr("fill", d => groupData[d.id]["background-color"])
+		.attr("d", ({ points }) => getSmoothHull(points, 5))
+		.attr("fill", ({ id }) => groupData[id]["background-color"])
 
 	group
 		.append("text")
 		.classed("group-label", true)
-		.attr("x", d => Math.round(d.center.x))
-		.attr("y", d => Math.round(d.center.y))
+		.attr("x", ({ center }) => Math.round(center.x))
+		.attr("y", ({ center }) => Math.round(center.y))
 		.attr("text-anchor", "middle")
-		.attr("fill", d => groupData[d.id]["foreground-color"])
-		.text(d => groupData[d.id].label)
+		.attr("fill", ({ id }) => groupData[id]["foreground-color"])
+		.text(({ id }) => groupData[id].label)
 }
 
-function addCircles(node, links) {
+function addNodes(node, links) {
 	const linkCounts = getLinkCounts(links)
+
+	node
+		.classed("open", ({ id }) => linkCounts[id]?.to === 0)
+		.classed("closed", ({ id }) => linkCounts[id]?.to !== 0)
+		.classed("completed", ({ complete }) => complete)
+		.classed("in-progress", ({ in_progress }) => in_progress)
+		.classed("critical", ({ critical }) => critical)
+		.on("click", (_, d) => {
+			centerNode(d.x, d.y)
+			showDetails(d)
+		})
+
+	node
+
+}
+
+function addCircle(node) {
 	const offset = {
 		x: 2,
 		y: 2,
 	}
 
 	node
-		.classed("open", (d) => linkCounts[d.id]?.to === 0)
-		.classed("closed", (d) => linkCounts[d.id]?.to !== 0)
-		.classed("completed", (d) => d.complete)
-		.classed("in-progress", (d) => d["in_progress"])
-		.classed("critical", (d) => d.critical)
-		.on("click", (_, d) => {
-			centerNode(d.x, d.y)
-			showDetails(d)
-		}).append("use")
+		.append("use")
 		.attr("width", 4)
 		.attr("height", 4)
-		.attr("x", d => Math.round(d.x - offset.x))
-		.attr("y", d => Math.round(d.y - offset.y))
+		.attr("x", ({ x }) => Math.round(x - offset.x))
+		.attr("y", ({ y }) => Math.round(y - offset.y))
 		.attr("href", "#circle")
 }
 
-function addTextLabel(node) {
+function addLabel(node) {
 	const offset = {
 		x: 0,
 		y: 4,
 	}
 
 	node
+		.append("text")
+		.classed("label", true)
 		.attr("x", ({ x }) => Math.round(x + offset.x))
 		.attr("y", ({ y }) => Math.round(y + offset.y))
 		.attr("text-anchor", "middle")
@@ -130,14 +134,14 @@ function addTextLabel(node) {
 }
 
 function addLink(link) {
-	return link
+	link
 		.append("path")
 		.classed("link", true)
 		.attr("id", ({ source, target }) => `link-${source.id}${target.id}`.replaceAll(" ", ""))
 		.attr("d", ({ source, target }) => `M${source.x},${source.y} ${target.x},${target.y}`)
 }
 
-function addMarchingAnts(link) {
+function addArrows(link) {
 	link
 		.append("g")
 		.append("use")
