@@ -1,6 +1,7 @@
 import data from "./data.json"
 const { nodes, links, groups } = data
-import { rerun, initializeSimulation } from "./chart/simulation/simulation.js"
+import { renderSimulation, initializeSimulation } from "./chart/simulation/simulation.js"
+import { resetZoom } from "./chart/rendering/chart.js"
 import { select, selectAll } from "d3"
 
 const $nodeFiltersList = document.querySelector("#node-filters-list")
@@ -12,9 +13,7 @@ $allOption.textContent = "All"
 $nodeFiltersList.append($allOption)
 
 const simulation = initializeSimulation()
-rerun({ simulation, nodes, links, groups })
-
-const node = selectAll(".node")
+renderSimulation({ simulation, nodes, links, groups })
 
 Object.values(groups)
 	.map(group => {
@@ -27,7 +26,7 @@ Object.values(groups)
 	})
 
 $resetFilters.addEventListener("click", () => {
-	node.data(nodes)
+	selectAll(".node").data(nodes)
 })
 
 $nodeFiltersList.addEventListener("input", (event) => {
@@ -47,7 +46,7 @@ $nodeFiltersList.addEventListener("input", (event) => {
 		? groups
 		: Object.values(groups).filter((group) => group.id === id)
 
-	rerun({
+	renderSimulation({
 		simulation,
 		nodes: uniqueNodes,
 		links: normalizedLinks,
@@ -56,6 +55,5 @@ $nodeFiltersList.addEventListener("input", (event) => {
 })
 
 select(window).on("resize", () => {
-	simulation.restart()
-	rerun({ simulation, nodes, links, groups })
+	resetZoom(window.innerWidth)
 })

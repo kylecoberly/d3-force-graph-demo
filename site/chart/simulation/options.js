@@ -1,7 +1,4 @@
-export const {
-	simulation,
-	forces,
-} = {
+const options = {
 	simulation: {
 		tickCount: 300,
 		alphaCutoff: 0.3,
@@ -30,7 +27,10 @@ export const {
 			},
 		},
 		group: {
-			charge: 0.5,
+			charge: {
+				initial: 0.5,
+				final: 0.5,
+			},
 			link: {
 				strength: {
 					initial: 1,
@@ -44,3 +44,5 @@ export const {
 		},
 	},
 }
+
+export default options

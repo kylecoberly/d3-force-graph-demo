@@ -1,8 +1,4 @@
-export const {
-	chart,
-	zoom,
-	focus,
-} = {
+const options = {
 	chart: {
 		height: 600,//window.innerHeight * 0.8,
 		width: 1000,//window.innerWidth * 0.8,
@@ -20,3 +16,5 @@ export const {
 		scale: 18,
 	},
 }
+
+export default options

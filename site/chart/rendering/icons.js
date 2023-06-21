@@ -1,4 +1,3 @@
-// Arrow symbol
 export function addArrow(defs) {
 	defs
 		.append("symbol")
@@ -15,7 +14,6 @@ export function addArrow(defs) {
 		`)
 }
 
-// Circle Node
 export function addCircle(defs) {
 	defs
 		.append("symbol")

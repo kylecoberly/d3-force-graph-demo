@@ -1,22 +1,18 @@
 import { select, zoomIdentity, zoom as Zoom, interpolate } from "d3"
-import { chart, focus, zoom as zoomOptions } from "./options.js"
+import options from "./options.js"
 import { addArrow, addCircle } from "./icons.js"
 
 const {
-	height,
-	width,
-} = chart
-const {
-	initialScale,
-	initialCoordinates,
-	minimum,
-	maximum,
-	constraintFactor,
-} = zoomOptions
-const {
-	duration,
-	scale,
-} = focus
+	chart: { width, height },
+	zoom: {
+		initialScale,
+		initialCoordinates,
+		minimum,
+		maximum,
+		constraintFactor,
+	},
+	focus: focusSettings,
+} = options
 
 const zoom = Zoom()
 	.interpolate(interpolate)
@@ -32,53 +28,58 @@ const svg = select("#container")
 	.attr("viewBox", [width / -2, height / -2, width, height])
 	.attr("width", `${width}px`)
 	.attr("height", `${height}px`)
-	.call(attachFocus)
-	.call(attachZoom)
+	.call(attachFocusListener)
+	.call(zoom)
 	.append("g")
 	.classed("bounds", true)
 	.attr("width", `${width}`)
 	.attr("height", `${height}`)
-	.call(listenForZoom)
+	.call(attachZoomListener, zoom)
 
-const defs = svg.append("defs")
-addArrow(defs)
-addCircle(defs)
+svg.call(initializeZoom)
 
+svg.append("defs")
+	.call(addArrow)
+	.call(addCircle)
 
-function attachZoom(svg) {
+function initializeZoom(svg) {
 	const { x, y } = initialCoordinates
+	const initialTransform = zoomIdentity
+		.translate(x, y)
+		.scale(initialScale)
 
-	svg
-		.call(zoom)
-		.call(
-			zoom.transform,
-			zoomIdentity
-				.translate(x, y)
-				.scale(initialScale)
-		)
+	svg.call(zoom.transform, initialTransform)
 }
 
-function listenForZoom(bounds) {
-	bounds
-		.call(() => {
-			zoom.on("zoom", ({ transform }) => {
-				bounds.attr("transform", transform)
-			})
-		})
+export function resetZoom(currentWidth) {
+	const scalingFactor = 5
+	const widthRatio = currentWidth / width
+	const newScale = widthRatio * (scalingFactor)
+	const initialTransform = zoomIdentity
+		.scale(newScale)
+
+	svg.call(zoom.transform, initialTransform)
 }
 
-function attachFocus(svg) {
-	svg
-		.on("click", (event) => {
-			if (event.target.tagName !== "use") {
-				select("#container .details")
-					.classed("open", false)
-			}
-		})
+function attachZoomListener(bounds, zoom) {
+	zoom.on("zoom", ({ transform }) => {
+		bounds.attr("transform", transform)
+	})
+}
+
+function attachFocusListener(svg) {
+	svg.on("click", (event) => {
+		if (event.target.tagName !== "use") {
+			select("#container .details")
+				.classed("open", false)
+		}
+	})
 }
 
 export function centerNode(x, y) {
+	const { scale, duration } = focusSettings
 	const transform = zoomIdentity.scale(scale).translate(-x, -y)
+
 	select("#container svg")
 		.transition()
 		.duration(duration)
