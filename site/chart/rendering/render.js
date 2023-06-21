@@ -1,10 +1,11 @@
-import { getLinkCounts, getCentroids, toDegrees } from "./utilities.js"
+import { select } from "d3"
 import "./icons.js"
 import { centerNode, showDetails } from "./focus.js"
-import data from "../data.json"
+import { getLinkCounts, getCentroids, toDegrees } from "../utilities.js"
+import data from "../../data.json"
+import getSmoothHull from "../simulation/hull.js"
+
 const { groups: groupData } = data
-import getSmoothHull from "./hull.js"
-import { select } from "d3"
 
 export default function render({ groups, nodes, links }) {
 	const groupCenters = getCentroids(nodes)
