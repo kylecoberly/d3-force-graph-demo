@@ -1,4 +1,5 @@
 import { min, max } from "d3"
+import options from "./rendering/options.js"
 
 export function getCentroids(nodes) {
 	const groupCoordinates = getGroupCoordinates(nodes)
@@ -67,4 +68,35 @@ export function clampToBoundary(nodes, size) {
 		d.x = min([d.x, size])
 		d.y = min([d.y, size])
 	})
+}
+
+export function move(selection) {
+	const {
+		chart: {
+			transitionRate,
+		},
+	} = options
+	const offset = {
+		x: 2,
+		y: 2,
+	}
+
+	selection
+		.transition()
+		.duration(transitionRate)
+		.attr("x", ({ x }) => Math.round(x + offset.x))
+		.attr("y", ({ y }) => Math.round(y + offset.y))
+}
+
+export function fadeIn(selection) {
+	const {
+		chart: {
+			transitionRate,
+		},
+	} = options
+
+	selection
+		.transition()
+		.duration(transitionRate)
+		.style("opacity", 1)
 }

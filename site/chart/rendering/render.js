@@ -1,15 +1,23 @@
 import { select } from "d3"
 import "./icons.js"
-import { getCentroids } from "../utilities.js"
+import options from "./options.js"
+import { getCentroids, move } from "../utilities.js"
 import {
-	addLink,
+	addLinks,
 	addArrows,
-	addCircle,
+	addCircles,
 	addNodes,
 	addGroups,
-	addLabel,
+	addLabels,
 } from "./elements"
 import getSmoothHull from "../simulation/hull.js"
+
+const {
+	chart: {
+		transitionRate,
+		hullPadding,
+	},
+} = options
 
 export default function render({ groups, nodes, links }) {
 	select(".bounds").selectAll(".link")
@@ -18,19 +26,17 @@ export default function render({ groups, nodes, links }) {
 			enter => enter
 				.append("g")
 				.classed("link", true)
-				.call(addLink)
+				.call(addLinks)
 				.call(addArrows),
 			update => update
 				.selectAll(".link")
 				.transition()
-				.duration(1000)
-				.attr("d", ({ source, target }) => `M${source.x},${source.y} ${target.x},${target.y}`),
+				.duration(transitionRate)
+				.attr("d", ({ source, target }) => `
+					M${source.x},${source.y} ${target.x},${target.y}
+				`),
 			exit => exit.remove(),
 		)
-	const offset = {
-		x: 2,
-		y: 2,
-	}
 
 	select(".bounds").selectAll(".node")
 		.data(nodes, ({ id }) => id)
@@ -38,26 +44,23 @@ export default function render({ groups, nodes, links }) {
 			enter => enter
 				.append("g")
 				.classed("node", true)
-				.call(addCircle)
+				.call(addCircles)
 				.call(addNodes, links)
-				.call(addLabel),
+				.call(addLabels),
 			update => update
-				.call(node => {
-					node.select("text")
-						.transition()
-						.duration(1000)
-						.attr("x", ({ x }) => Math.round(x + offset.x))
-						.attr("y", ({ y }) => Math.round(y + offset.y))
-				})
-				.call(node => {
-					node.select("use")
-						.transition()
-						.duration(1000)
-						.attr("x", ({ x }) => Math.round(x - offset.x))
-						.attr("y", ({ y }) => Math.round(y - offset.y))
-				}),
+				.call(node => node.select("text").call(move))
+				.call(node => node.select("use").call(move)),
 			exit => exit.remove(),
 		)
+
+	function setGroupData(d) {
+		const { id } = d
+		d.x = groupCenters[id].x
+		d.y = groupCenters[id].y
+		d.points = nodes
+			.filter(({ group }) => group === id)
+			.map(({ x, y }) => [x, y])
+	}
 
 	const groupCenters = getCentroids(nodes)
 	select(".bounds").selectAll(".domain")
@@ -66,35 +69,18 @@ export default function render({ groups, nodes, links }) {
 			enter => enter
 				.append("g")
 				.classed("domain", true)
-				.each((d) => {
-					d.center = groupCenters[d.id]
-					d.points = nodes
-						.filter(node => node.group === d.id)
-						.map(({ x, y }) => [x, y])
-				})
+				.each(setGroupData)
 				.call(addGroups, groups)
 				.lower(),
 			update => update
-				.each((d) => {
-					d.center = groupCenters[d.id]
-					d.points = nodes
-						.filter(node => node.group === d.id)
-						.map(({ x, y }) => [x, y])
-				})
+				.each(setGroupData)
 				.call(group => {
 					group.select("path")
 						.transition()
-						.duration(1000)
-						.attr("d", ({ points }) => getSmoothHull(points, 5))
+						.duration(transitionRate)
+						.attr("d", ({ points }) => getSmoothHull(points, hullPadding))
 				})
-				.call(group => {
-					group.select("text")
-						.transition()
-						.duration(1000)
-						.attr("x", ({ center }) => Math.round(center.x))
-						.attr("y", ({ center }) => Math.round(center.y))
-				}),
+				.call(group => group.select("text").call(move)),
 			exit => exit.remove(),
 		)
 }
-

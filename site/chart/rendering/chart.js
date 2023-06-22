@@ -26,8 +26,6 @@ const svg = select("#container")
 	.append("svg")
 	.attr("preserveAspectRatio", "xMinYMin meet")
 	.attr("viewBox", [width / -2, height / -2, width, height])
-	.attr("width", `${width}px`)
-	.attr("height", `${height}px`)
 	.call(attachFocusListener)
 	.call(zoom)
 	.append("g")
@@ -77,7 +75,9 @@ function attachFocusListener(svg) {
 
 export function centerNode(x, y) {
 	const { scale, duration } = focusSettings
-	const transform = zoomIdentity.scale(scale).translate(-x, -y)
+	const transform = zoomIdentity
+		.scale(scale)
+		.translate(-x, -y)
 
 	select("#container svg")
 		.transition()

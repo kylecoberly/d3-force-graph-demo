@@ -1,23 +1,27 @@
 import { centerNode, showDetails } from "./chart.js"
-import { getLinkCounts, toDegrees } from "../utilities.js"
+import { getLinkCounts, toDegrees, move, fadeIn } from "../utilities.js"
+import options from "./options.js"
 import getSmoothHull from "../simulation/hull.js"
 
+const {
+	chart: {
+		hullPadding,
+	},
+} = options
+
+
 export function addGroups(group, groups) {
-	group
-		.transition()
-		.duration(1000)
-		.style("opacity", 1)
+	group.call(fadeIn)
 
 	group
 		.append("path")
-		.attr("d", ({ points }) => getSmoothHull(points, 5))
+		.attr("d", ({ points }) => getSmoothHull(points, hullPadding))
 		.attr("fill", ({ id }) => groups[id]["background-color"])
 
 	group
 		.append("text")
 		.classed("group-label", true)
-		.attr("x", ({ center }) => Math.round(center.x))
-		.attr("y", ({ center }) => Math.round(center.y))
+		.call(move)
 		.attr("fill", ({ id }) => groups[id]["foreground-color"])
 		.attr("text-anchor", "middle")
 		.text(({ id }) => groups[id].label)
@@ -36,12 +40,10 @@ export function addNodes(node, links) {
 			centerNode(d.x, d.y)
 			showDetails(d)
 		})
-		.transition()
-		.duration(1000)
-		.style("opacity", 1)
+		.call(fadeIn)
 }
 
-export function addCircle(node) {
+export function addCircles(node) {
 	const offset = {
 		x: 2,
 		y: 2,
@@ -54,12 +56,10 @@ export function addCircle(node) {
 		.attr("x", ({ x }) => Math.round(x - offset.x))
 		.attr("y", ({ y }) => Math.round(y - offset.y))
 		.attr("href", "#circle")
-		.transition()
-		.duration(1000)
-		.style("opacity", 1)
+		.call(fadeIn)
 }
 
-export function addLabel(node) {
+export function addLabels(node) {
 	const offset = {
 		x: 0,
 		y: 4,
@@ -72,20 +72,20 @@ export function addLabel(node) {
 		.attr("y", ({ y }) => Math.round(y + offset.y))
 		.attr("text-anchor", "middle")
 		.text(({ id }) => id)
-		.transition()
-		.duration(1000)
-		.style("opacity", 1)
+		.call(fadeIn)
 }
 
-export function addLink(link) {
+export function addLinks(link) {
 	link
 		.append("path")
 		.classed("link", true)
-		.attr("id", ({ source, target }) => `link-${source.id}${target.id}`.replaceAll(" ", ""))
-		.attr("d", ({ source, target }) => `M${source.x},${source.y} ${target.x},${target.y}`)
-		.transition()
-		.duration(1000)
-		.style("opacity", 1)
+		.attr("id", ({ source, target }) => `
+			link-${source.id}${target.id}
+		`.replaceAll(" ", "").trim())
+		.attr("d", ({ source, target }) => `
+			M${source.x},${source.y} ${target.x},${target.y}
+		`.trim())
+		.call(fadeIn)
 }
 
 export function addArrows(link) {
@@ -109,8 +109,6 @@ export function addArrows(link) {
 		.attr("dur", "0.5s")
 		.attr("repeatCount", "indefinite")
 		.append("mpath")
-		.transition()
-		.duration(1000)
 		.attr("href", ({ source, target }) => {
 			const id = `${source.id}${target.id}`.replaceAll(" ", "")
 			return `#link-${id}`
