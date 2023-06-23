@@ -1,6 +1,6 @@
 import { select, zoomIdentity, zoom as Zoom, interpolate } from "d3"
-import options from "./options.js"
 import { addArrow, addCircle } from "./icons.js"
+import options from "./options.js"
 
 const {
 	chart: { width, height, resetScalingFactor },
