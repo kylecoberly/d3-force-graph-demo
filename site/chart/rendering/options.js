@@ -6,6 +6,7 @@ const options = {
 		resetScalingFactor: 5,
 		transitionRate: 500,
 		hullPadding: 5,
+		nodeDiameter: 4,
 	},
 	zoom: {
 		initialScale: 4,

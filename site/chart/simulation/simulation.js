@@ -1,13 +1,10 @@
 import {
-	forceSimulation, forceManyBody, forceX, forceY,
-	forceCollide, forceLink
+	forceSimulation, forceManyBody, forceX, forceY, forceCollide
 } from "d3"
-import { clampToBoundary } from "../utilities.js"
-import render from "../rendering/render.js"
-import attractGroups from "./attract-groups.js"
-import shapeLinks from "./shape-links.js"
+import attractGroups from "./forces/attract-groups.js"
+import shapeLinks from "./forces/shape-links.js"
+import createLinkForce from "./forces/links.js"
 import simulationOptions from "./options.js"
-import chartOptions from "../rendering/options.js"
 
 const {
 	simulation: {
@@ -24,35 +21,26 @@ const {
 		},
 		group: {
 			charge: groupCharge,
-			link: {
-				strength: groupLinkStrength,
-			},
 			distance: groupDistance,
 		},
 	},
 } = simulationOptions
 
-const {
-	chart: {
-		boundary: chartBoundary,
+export default function runSimulation({ nodes, links, simulation = initializeSimulation() }) {
+	simulation
+		.nodes(nodes)
+		.force("link", createLinkForce().links(links))
+		.stop()
+
+	let count = tickCount
+	simulation.alpha(1)
+	while (count > 0) {
+		simulation.tick()
+		count--
 	}
-} = chartOptions
-
-const linkForce = forceLink()
-	.id(({ id }) => id)
-	.distance(linkDistance.initial)
-	.strength(({ source, target }) => (
-		source.group === target.group
-			? groupLinkStrength.initial
-			: linkStrength.initial
-	))
-
-export function renderSimulation({ simulation, nodes, links, groups }) {
-	runSimulation(simulation, { nodes, links })
-	render({ nodes, links, groups })
 }
 
-export function initializeSimulation() {
+function initializeSimulation() {
 	const { x, y } = positionalForce
 
 	return forceSimulation()
@@ -60,35 +48,17 @@ export function initializeSimulation() {
 		.force("x", forceX(x))
 		.force("y", forceY(y))
 		.force("collision", forceCollide(collision.initial))
+		.on("tick", updateSimulation)
 }
 
-function runSimulation(simulation, { nodes, links }) {
-	simulation
-		.nodes(nodes)
-		.force("link", linkForce.links(links))
-		.stop()
-
-	let count = tickCount
-	simulation.alpha(1).restart()
-	while (count > 0) {
-		simulation.tick()
-		update(simulation)
-		count--
-	}
-}
-
-function update(simulation) {
-	const alpha = simulation.alpha()
-	const nodes = simulation.nodes()
-
-	attractGroups(nodes, alpha, {
+function updateSimulation(simulation) {
+	attractGroups(simulation, {
 		alphaCutoff,
 		chargeStrength: groupCharge.initial,
 		distanceCutoff: groupDistance.cutoff,
 		distanceRate: groupDistance.rate,
 	})
-	clampToBoundary(nodes, chartBoundary)
-	shapeLinks(simulation, alpha, {
+	shapeLinks(simulation, {
 		alphaCutoff,
 		chargeStrength: charge.final,
 		collisionStrength: collision.final,

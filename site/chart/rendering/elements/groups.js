@@ -1,5 +1,5 @@
 import { move, fadeIn } from "../../utilities.js"
-import getSmoothHull from "../../simulation/hull.js"
+import getSmoothHull from "../../hull.js"
 import options from "../options.js"
 
 const {

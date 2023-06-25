@@ -1,15 +1,13 @@
 import { select } from "d3"
-import "./icons.js"
 import options from "./options.js"
 import { getCentroids, move } from "../utilities.js"
-import getSmoothHull from "../simulation/hull.js"
+import getSmoothHull from "../hull.js"
 
-import renderArrows from "./elements/arrows.js"
+import "./chart.js"
+import "./elements/icons.js"
 import renderLinks from "./elements/links.js"
 import renderNodes from "./elements/nodes.js"
-import renderCircles from "./elements/circles.js"
 import renderGroups from "./elements/groups.js"
-import renderLabels from "./elements/labels.js"
 
 const {
 	chart: {
@@ -25,8 +23,7 @@ export default function render({ groups, nodes, links }) {
 			enter => enter
 				.append("g")
 				.classed("link", true)
-				.call(renderLinks)
-				.call(renderArrows),
+				.call(renderLinks),
 			update => update
 				.selectAll(".link")
 				.transition()
@@ -43,16 +40,39 @@ export default function render({ groups, nodes, links }) {
 			enter => enter
 				.append("g")
 				.classed("node", true)
-				.call(renderCircles)
-				.call(renderNodes, links)
-				.call(renderLabels),
+				.call(renderNodes, links),
 			update => update
 				.call(node => node.select("text").call(move))
 				.call(node => node.select("use").call(move)),
 			exit => exit.remove(),
 		)
 
-	function setGroupData(d) {
+	select(".bounds").selectAll(".domain")
+		.data(Object.values(groups), ({ id }) => id)
+		.join(
+			enter => enter
+				.append("g")
+				.classed("domain", true)
+				.each(setGroupData(nodes))
+				.call(renderGroups, groups)
+				.lower(),
+			update => update
+				.each(setGroupData(nodes))
+				.call(group => group
+					.select("path")
+					.transition()
+					.duration(transitionRate)
+					// Redundant?
+					.attr("d", ({ points }) => getSmoothHull(points, hullPadding))
+				)
+				.call(group => group.select("text").call(move)),
+			exit => exit.remove(),
+		)
+}
+
+function setGroupData(nodes) {
+	return d => {
+		const groupCenters = getCentroids(nodes)
 		const { id } = d
 		d.x = groupCenters[id].x
 		d.y = groupCenters[id].y
@@ -60,26 +80,4 @@ export default function render({ groups, nodes, links }) {
 			.filter(({ group }) => group === id)
 			.map(({ x, y }) => [x, y])
 	}
-
-	const groupCenters = getCentroids(nodes)
-	select(".bounds").selectAll(".domain")
-		.data(Object.values(groups), ({ id }) => id)
-		.join(
-			enter => enter
-				.append("g")
-				.classed("domain", true)
-				.each(setGroupData)
-				.call(renderGroups, groups)
-				.lower(),
-			update => update
-				.each(setGroupData)
-				.call(group => group
-					.select("path")
-					.transition()
-					.duration(transitionRate)
-					.attr("d", ({ points }) => getSmoothHull(points, hullPadding))
-				)
-				.call(group => group.select("text").call(move)),
-			exit => exit.remove(),
-		)
 }

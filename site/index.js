@@ -1,19 +1,14 @@
 import data from "./data.json"
 const { nodes, links, groups } = data
-import { renderSimulation, initializeSimulation } from "./chart/simulation/simulation.js"
-import { resetZoom } from "./chart/rendering/chart.js"
-import { select } from "d3"
+import runSimulation from "./chart/simulation/simulation.js"
+import render from "./chart/rendering/render.js"
 
 const $nodeFiltersList = document.querySelector("#node-filters-list")
-const $resetFilters = document.querySelector("#reset-filters")
 
 const $allOption = document.createElement("option")
 $allOption.value = "all"
 $allOption.textContent = "All"
 $nodeFiltersList.append($allOption)
-
-const simulation = initializeSimulation()
-renderSimulation({ simulation, nodes, links, groups })
 
 Object.values(groups)
 	.map(group => {
@@ -25,6 +20,7 @@ Object.values(groups)
 		$nodeFiltersList.append($option)
 	})
 
+const $resetFilters = document.querySelector("#reset-filters")
 $resetFilters.addEventListener("click", () => {
 	rerender("all")
 })
@@ -32,6 +28,9 @@ $resetFilters.addEventListener("click", () => {
 $nodeFiltersList.addEventListener("input", (event) => {
 	rerender(event.target.value)
 })
+
+const simulation = runSimulation({ nodes, links, groups })
+render({ nodes, links, groups })
 
 function rerender(id) {
 	const normalizedLinks = id === "all"
@@ -49,14 +48,15 @@ function rerender(id) {
 		? groups
 		: { [id]: groups[id] }
 
-	renderSimulation({
+	runSimulation({
 		simulation,
 		nodes: uniqueNodes,
 		links: normalizedLinks,
 		groups: normalizedGroups,
 	})
+	render({
+		nodes: uniqueNodes,
+		links: normalizedLinks,
+		groups: normalizedGroups
+	})
 }
-
-select(window).on("resize", () => {
-	resetZoom(window.innerWidth)
-})

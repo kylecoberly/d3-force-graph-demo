@@ -2,12 +2,12 @@ import { forceManyBody, forceLink, forceCollide } from "d3"
 
 export default function shapeLinks(
 	simulation,
-	alpha,
 	{
 		alphaCutoff, chargeStrength, linkDistance,
 		collisionStrength, linkStrength,
 	}
 ) {
+	const alpha = simulation.alpha()
 	if (alpha < alphaCutoff) {
 		simulation
 			.force("charge", forceManyBody()

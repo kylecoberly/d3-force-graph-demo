@@ -1,11 +1,14 @@
-import { getDistance, getCentroids } from "../utilities.js"
+import { getDistance, getCentroids } from "../../utilities.js"
 
-export default function attractGroups(nodes, alpha, {
+export default function attractGroups(simulation, {
 	alphaCutoff,
 	chargeStrength,
 	distanceCutoff,
 	distanceRate,
 }) {
+	const nodes = simulation.nodes()
+	const alpha = simulation.nodes()
+
 	const centroids = getCentroids(nodes)
 	nodes.forEach(d => {
 		const groupCenter = {
@@ -28,4 +31,16 @@ export default function attractGroups(nodes, alpha, {
 			d.y = (nodePosition.y * charge) + (groupCenter.y * charge)
 		}
 	})
+}
+
+function getDistance({ x: x1, y: y1 }, { x: x2, y: y2 }) {
+	const positionDifferential = {
+		x: x1 > x2 ? x1 - x2 : x2 - x1,
+		y: y1 > y2 ? y1 - y2 : y2 - y1,
+	}
+
+	return Math.sqrt(
+		positionDifferential.x ** 2
+		+ positionDifferential.y ** 2
+	)
 }
