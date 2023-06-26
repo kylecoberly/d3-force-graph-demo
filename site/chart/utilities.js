@@ -46,12 +46,13 @@ export function toDegrees(radians) {
 	return radians * (180 / Math.PI)
 }
 
-export function move(selection, offset = { x: 2, y: 2 }) {
+export function move(selection, offset = { x: 0, y: 0 }) {
 	selection
 		.transition()
 		.duration(transitionRate)
 		.attr("x", ({ x }) => clampToInteger(x - offset.x, -boundary.x, boundary.x))
 		.attr("y", ({ y }) => clampToInteger(y - offset.y, -boundary.y, boundary.y))
+		.selection()
 }
 
 export function fadeIn(selection) {
@@ -59,6 +60,7 @@ export function fadeIn(selection) {
 		.transition()
 		.duration(transitionRate)
 		.style("opacity", 1)
+		.selection()
 }
 
 export function clampToInteger(value, lowerBound, upperBound) {
@@ -66,9 +68,9 @@ export function clampToInteger(value, lowerBound, upperBound) {
 		max([
 			min([
 				value,
-				lowerBound,
+				upperBound,
 			]),
-			upperBound,
+			lowerBound,
 		])
 	)
 }

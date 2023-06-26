@@ -31,7 +31,7 @@ function createOnePointHull(point, hullPadding) {
 function createTwoPointHull([p1, p2], hullPadding) {
 	const vector = createVector(p1, p2, hullPadding);
 
-	const tangentHalfLength = 1.2 * hullPadding
+	const tangentHalfLength = 0.1 * hullPadding
 	const controlDelta = scaleVector(
 		[-vector[1], vector[0]],
 		tangentHalfLength,

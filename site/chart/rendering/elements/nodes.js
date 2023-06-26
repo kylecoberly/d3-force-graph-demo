@@ -17,7 +17,6 @@ export default function renderNodes(node, links) {
 		.attr("height", nodeDiameter)
 		.attr("href", "#circle")
 		.call(move)
-		.call(fadeIn)
 
 	const linkCounts = getLinkCounts(links)
 	node
@@ -31,7 +30,6 @@ export default function renderNodes(node, links) {
 			centerNode({ element: svg, zoom, x: d.x, y: d.y, settings })
 			showDetails(d)
 		})
-		.call(fadeIn)
 
 	node
 		.append("text")
@@ -39,7 +37,6 @@ export default function renderNodes(node, links) {
 		.attr("text-anchor", "middle")
 		.text(({ id }) => id)
 		.call(move, { x: 0, y: 4 })
-		.call(fadeIn)
 }
 
 function centerNode({ element, zoom, x, y, settings }) {
@@ -51,6 +48,7 @@ function centerNode({ element, zoom, x, y, settings }) {
 	element
 		.transition()
 		.duration(duration)
+		.selection()
 		.call(zoom.transform, transform)
 }
 

@@ -40,6 +40,8 @@ export default function runSimulation({ nodes, links, simulation = initializeSim
 		count--
 		updateSimulation(simulation)
 	}
+	simulation.restart()
+	return simulation
 }
 
 function initializeSimulation() {

@@ -10,7 +10,8 @@ $allOption.value = "all"
 $allOption.textContent = "All"
 $nodeFiltersList.append($allOption)
 
-Object.values(groups)
+Object
+	.values(groups)
 	.map(group => {
 		const $option = document.createElement("option")
 		$option.textContent = group.label
@@ -20,20 +21,23 @@ Object.values(groups)
 		$nodeFiltersList.append($option)
 	})
 
-const $resetFilters = document.querySelector("#reset-filters")
-$resetFilters.addEventListener("click", () => {
-	rerender("all")
-})
+document
+	.querySelector("#reset-filters")
+	.addEventListener("click", () => {
+		rerender("all")
+	})
 
-$nodeFiltersList.addEventListener("input", (event) => {
-	rerender(event.target.value)
-})
+$nodeFiltersList
+	.addEventListener("input", (event) => {
+		rerender(event.target.value)
+	})
 
-const simulation = runSimulation({ nodes, links, groups })
+let simulation = runSimulation({
+	nodes, links, groups
+})
 rerender("all")
 
 function rerender(id) {
-	console.log("rere", id)
 	const normalizedLinks = id === "all"
 		? links
 		: links.filter(({ source, target }) => [source.group, target.group].includes(id))
@@ -49,12 +53,13 @@ function rerender(id) {
 		? groups
 		: { [id]: groups[id] }
 
-	runSimulation({
+	simulation = runSimulation({
 		simulation,
 		nodes: uniqueNodes,
 		links: normalizedLinks,
 		groups: normalizedGroups,
 	})
+
 	render({
 		nodes: uniqueNodes,
 		links: normalizedLinks,

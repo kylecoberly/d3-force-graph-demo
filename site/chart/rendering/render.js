@@ -1,6 +1,6 @@
 import { select } from "d3"
 import options from "./options.js"
-import { getCentroids, move } from "../utilities.js"
+import { getCentroids, move, fadeIn } from "../utilities.js"
 import getSmoothHull from "../hull.js"
 
 import "./chart.js"
@@ -40,7 +40,8 @@ export default function render({ groups, nodes, links }) {
 			enter => enter
 				.append("g")
 				.classed("node", true)
-				.call(renderNodes, links),
+				.call(renderNodes, links)
+				.call(fadeIn),
 			update => update
 				.call(node => node.select("text").call(move))
 				.call(node => node.select("use").call(move)),
