@@ -7,7 +7,7 @@ const {
 	focus: settings,
 	chart: {
 		nodeDiameter
-	}
+	},
 } = options
 
 export default function renderNodes(node, links) {

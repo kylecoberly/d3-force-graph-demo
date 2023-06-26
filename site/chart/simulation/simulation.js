@@ -27,9 +27,10 @@ const {
 } = simulationOptions
 
 export default function runSimulation({ nodes, links, simulation = initializeSimulation() }) {
+	const linkForce = createLinkForce().links(links)
 	simulation
 		.nodes(nodes)
-		.force("link", createLinkForce().links(links))
+		.force("link", linkForce)
 		.stop()
 
 	let count = tickCount
@@ -37,6 +38,7 @@ export default function runSimulation({ nodes, links, simulation = initializeSim
 	while (count > 0) {
 		simulation.tick()
 		count--
+		updateSimulation(simulation)
 	}
 }
 
@@ -48,7 +50,6 @@ function initializeSimulation() {
 		.force("x", forceX(x))
 		.force("y", forceY(y))
 		.force("collision", forceCollide(collision.initial))
-		.on("tick", updateSimulation)
 }
 
 function updateSimulation(simulation) {

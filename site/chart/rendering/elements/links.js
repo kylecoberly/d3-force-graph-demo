@@ -10,6 +10,7 @@ const {
 
 export default function addLinks(link) {
 	link
+		.call(renderArrows)
 		.append("path")
 		.attr("id", ({ source, target }) => `
 			link-${source.id}${target.id}
@@ -18,8 +19,6 @@ export default function addLinks(link) {
 			M${source.x},${source.y} ${target.x},${target.y}
 		`.trim())
 		.call(fadeIn)
-
-	link.call(renderArrows)
 }
 
 function renderArrows(link) {

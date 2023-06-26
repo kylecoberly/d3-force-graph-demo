@@ -12,6 +12,10 @@ const {
 	},
 } = options
 
+window.addEventListener("resize", () => {
+	resetZoom(select("#container svg"))
+})
+
 export const zoom = Zoom()
 	.interpolate(interpolate)
 	.scaleExtent([minimum, maximum])
@@ -27,10 +31,6 @@ export function initializeZoom(svg) {
 		.scale(initialScale)
 
 	svg.call(zoom.transform, initialTransform)
-
-	select(window).on("resize", () => {
-		resetZoom(svg)
-	})
 }
 
 export function attachZoomListener(bounds, zoom) {
@@ -39,8 +39,8 @@ export function attachZoomListener(bounds, zoom) {
 	})
 }
 
-export function resetZoom(element, currentWidth = window.innerWidth) {
-	const widthRatio = currentWidth / width
+export function resetZoom(element) {
+	const widthRatio = window.innerWidth / width
 	const newScale = widthRatio * resetScalingFactor
 	const initialTransform = zoomIdentity.scale(newScale)
 

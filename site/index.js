@@ -30,9 +30,10 @@ $nodeFiltersList.addEventListener("input", (event) => {
 })
 
 const simulation = runSimulation({ nodes, links, groups })
-render({ nodes, links, groups })
+rerender("all")
 
 function rerender(id) {
+	console.log("rere", id)
 	const normalizedLinks = id === "all"
 		? links
 		: links.filter(({ source, target }) => [source.group, target.group].includes(id))

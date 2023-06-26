@@ -5,7 +5,6 @@ import {
 	zoom,
 	attachZoomListener,
 	initializeZoom,
-	resetZoom
 } from "./zoom.js"
 
 const {
@@ -18,7 +17,6 @@ const svg = select("#container")
 	.attr("viewBox", [width / -2, height / -2, width, height])
 	.call(attachFocusListener)
 	.call(zoom)
-	.call(resetZoom)
 	.append("g")
 	.classed("bounds", true)
 	.attr("width", `${width}`)

@@ -1,4 +1,4 @@
-import { getDistance, getCentroids } from "../../utilities.js"
+import { getCentroids } from "../../utilities.js"
 
 export default function attractGroups(simulation, {
 	alphaCutoff,
@@ -7,7 +7,7 @@ export default function attractGroups(simulation, {
 	distanceRate,
 }) {
 	const nodes = simulation.nodes()
-	const alpha = simulation.nodes()
+	const alpha = simulation.alpha()
 
 	const centroids = getCentroids(nodes)
 	nodes.forEach(d => {
