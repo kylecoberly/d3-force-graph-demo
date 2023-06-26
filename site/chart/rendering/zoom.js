@@ -2,19 +2,18 @@ import { select, zoomIdentity, zoom as Zoom, interpolate } from "d3"
 import options from "./options.js"
 
 const {
-	chart: { width, height, resetScalingFactor },
+	chart: {
+		width,
+		height,
+		resetScalingFactor,
+		transitionRate
+	},
 	zoom: {
-		initialScale,
-		initialCoordinates,
 		minimum,
 		maximum,
 		constraintFactor,
 	},
 } = options
-
-window.addEventListener("resize", () => {
-	resetZoom(select("#container svg"))
-})
 
 export const zoom = Zoom()
 	.interpolate(interpolate)
@@ -24,25 +23,17 @@ export const zoom = Zoom()
 		[width / constraintFactor, height / constraintFactor]
 	])
 
-export function initializeZoom(svg) {
-	const { x, y } = initialCoordinates
-	const initialTransform = zoomIdentity
-		.translate(x, y)
-		.scale(initialScale)
-
-	svg.call(zoom.transform, initialTransform)
-}
-
 export function attachZoomListener(bounds, zoom) {
 	zoom.on("zoom", ({ transform }) => {
-		bounds.attr("transform", transform)
+		bounds
+			.attr("transform", transform)
 	})
 }
 
-export function resetZoom(element) {
+export function resetZoom(svg, zoom) {
 	const widthRatio = window.innerWidth / width
 	const newScale = widthRatio * resetScalingFactor
-	const initialTransform = zoomIdentity.scale(newScale)
+	const transform = zoomIdentity.scale(newScale)
 
-	element.call(zoom.transform, initialTransform)
+	svg.call(zoom.transform, transform)
 }

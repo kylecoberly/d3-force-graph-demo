@@ -2,9 +2,9 @@ import { select } from "d3"
 import { addArrow, addCircle } from "./elements/icons.js"
 import options from "./options.js"
 import {
-	zoom,
 	attachZoomListener,
-	initializeZoom,
+	zoom,
+	resetZoom,
 } from "./zoom.js"
 
 const {
@@ -23,7 +23,11 @@ const svg = select("#container")
 	.attr("height", `${height}`)
 	.call(attachZoomListener, zoom)
 
-svg.call(initializeZoom)
+svg.call(resetZoom, zoom)
+
+window.addEventListener("resize", () => {
+	resetZoom(select("#container svg"), zoom)
+})
 
 svg.append("defs")
 	.call(addArrow)

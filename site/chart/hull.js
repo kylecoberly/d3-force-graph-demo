@@ -31,7 +31,7 @@ function createOnePointHull(point, hullPadding) {
 function createTwoPointHull([p1, p2], hullPadding) {
 	const vector = createVector(p1, p2, hullPadding);
 
-	const tangentHalfLength = 0.1 * hullPadding
+	const tangentHalfLength = 0.075 * hullPadding
 	const controlDelta = scaleVector(
 		[-vector[1], vector[0]],
 		tangentHalfLength,
@@ -39,8 +39,8 @@ function createTwoPointHull([p1, p2], hullPadding) {
 	const inverseControlDelta = scaleVector(controlDelta, -1)
 
 	const endPoints = [
-		sumVectors(p1, scaleVector(vector, -1)),
-		sumVectors(p2, vector),
+		sumVectors(p1, scaleVector(vector, -0.6)),
+		sumVectors(p2, scaleVector(vector, 0.6)),
 	]
 	const controlPoints = [
 		sumVectors(endPoints[0], inverseControlDelta),

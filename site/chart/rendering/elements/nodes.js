@@ -46,9 +46,9 @@ function centerNode({ element, zoom, x, y, settings }) {
 		.translate(-x, -y)
 
 	element
-		.transition()
-		.duration(duration)
-		.selection()
+		// Do this with CSS animations instead instead
+		// .transition()
+		// .duration(duration)
 		.call(zoom.transform, transform)
 }
 
