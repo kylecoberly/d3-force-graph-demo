@@ -5,7 +5,7 @@ import setGroups from "./set-groups.js"
 import attractGroups from "./forces/attract-groups.js"
 import shapeLinks from "./forces/shape-links.js"
 import createLinkForce from "./forces/links.js"
-import simulationOptions from "./options.js"
+import options from "./options.js"
 
 const {
 	simulation: {
@@ -16,10 +16,10 @@ const {
 		charge,
 		collision,
 	},
-} = simulationOptions
+} = options
 
 export default function runSimulation({ nodes, links, groups, simulation = initializeSimulation() }) {
-	simulation.groups = simulation.groups || groups
+	simulation.groups = groups
 	const linkForce = createLinkForce().links(links)
 	simulation.restart()
 	simulation

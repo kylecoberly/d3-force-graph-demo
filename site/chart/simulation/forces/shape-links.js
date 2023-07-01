@@ -16,6 +16,7 @@ const {
 
 export default function shapeLinks(simulation) {
 	const alpha = simulation.alpha()
+
 	if (alpha < alphaCutoff) {
 		simulation
 			.force("charge", forceManyBody()

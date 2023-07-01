@@ -1,5 +1,6 @@
 import { min, max } from "d3"
 import options from "./options.js"
+import getSmoothHull from "./hull.js"
 
 const {
 	chart: {
@@ -21,7 +22,7 @@ export function movePath(selection) {
 	selection
 		.transition()
 		.duration(transitionRate)
-		.attr("d", ({ points }) => points.map())
+		.attr("d", ({ points }) => getSmoothHull(points))
 }
 
 export function moveLink(selection) {

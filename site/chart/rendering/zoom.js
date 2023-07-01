@@ -1,4 +1,4 @@
-import { select, zoomIdentity, zoom as Zoom, interpolate } from "d3"
+import { zoomIdentity, zoom as Zoom, interpolate } from "d3"
 import options from "./options.js"
 
 const {
@@ -6,7 +6,6 @@ const {
 		width,
 		height,
 		resetScalingFactor,
-		transitionRate
 	},
 	zoom: {
 		minimum,

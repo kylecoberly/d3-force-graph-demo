@@ -4,9 +4,10 @@ import { move, movePath, fadeIn } from "./animations.js"
 
 import "./chart.js"
 import "./elements/icons.js"
-import renderLinks from "./elements/links.js"
+import renderLinks, { generateLinkPath } from "./elements/links.js"
 import renderNodes from "./elements/nodes.js"
-import renderGroups from "./elements/groups.js"
+import renderGroups, { setActiveGroup } from "./elements/groups.js"
+import { wrap } from "lodash"
 
 const {
 	chart: {
@@ -14,7 +15,11 @@ const {
 	},
 } = options
 
-export default function render({ groups, nodes, links }) {
+export default function render(simulation, { currentFilter }) {
+	const nodes = simulation.nodes()
+	const links = simulation.force("link").links()
+	const groups = simulation.groups
+
 	select(".bounds").selectAll(".link")
 		.data(links, ({ source, target }) => `${source}-${target}`)
 		.join(
@@ -26,9 +31,7 @@ export default function render({ groups, nodes, links }) {
 				.selectAll(".link")
 				.transition()
 				.duration(transitionRate)
-				.attr("d", ({ source, target }) => `
-					M${source.x},${source.y} ${target.x},${target.y}
-				`.join("")),
+				.attr("d", generateLinkPath),
 			exit => exit.remove(),
 		)
 
@@ -41,8 +44,13 @@ export default function render({ groups, nodes, links }) {
 				.call(renderNodes, links)
 				.call(fadeIn),
 			update => update
-				.call(node => node.select("text").call(move))
-				.call(node => node.select("use").call(move)),
+				.call(node => node
+					.select("text")
+					.call(move)
+				).call(node => node
+					.select("use")
+					.call(move)
+				),
 			exit => exit.remove(),
 		)
 
@@ -52,9 +60,10 @@ export default function render({ groups, nodes, links }) {
 			enter => enter
 				.append("g")
 				.classed("domain", true)
-				.call(renderGroups, groups)
+				.call(renderGroups, currentFilter)
 				.lower(),
 			update => update
+				.call(setActiveGroup, currentFilter)
 				.call(group => group
 					.select("path")
 					.call(movePath)

@@ -15,7 +15,7 @@ const svg = select("#container")
 	.append("svg")
 	.attr("preserveAspectRatio", "xMinYMin meet")
 	.attr("viewBox", [width / -2, height / -2, width, height])
-	.call(attachFocusListener)
+	.call(attachResetFocus)
 	.call(zoom)
 	.append("g")
 	.classed("bounds", true)
@@ -23,17 +23,17 @@ const svg = select("#container")
 	.attr("height", `${height}`)
 	.call(attachZoomListener, zoom)
 
+svg.append("defs")
+	.call(addArrow)
+	.call(addCircle)
+
 svg.call(resetZoom, zoom)
 
 window.addEventListener("resize", () => {
 	resetZoom(select("#container svg"), zoom)
 })
 
-svg.append("defs")
-	.call(addArrow)
-	.call(addCircle)
-
-function attachFocusListener(svg) {
+function attachResetFocus(svg) {
 	svg.on("click", (event) => {
 		if (event.target.tagName !== "use") {
 			select("#container .details")

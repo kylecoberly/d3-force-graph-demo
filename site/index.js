@@ -8,42 +8,42 @@ renderFilters(groups)
 let simulation
 rerender("all")
 
-function rerender(id) {
-	const normalizedLinks = id === "all"
-		? links
-		: links
-			.filter(({ source, target }) => ([
-				source.group,
-				target.group
-			].includes(id)))
+function rerender(groupId) {
+	const currentNodeIds = nodes
+		.filter(node => groupId === "all" || node.group === groupId)
+		.map(({ id }) => id)
 
-	const normalizedNodes = Array.from(
-		(new Set(
-			normalizedLinks
-				.flatMap(({ source, target }) => ([
+	const normalizedLinks = groupId === "all"
+		? deepClone(links)
+		: deepClone(links)
+			.filter(({ source, target }) => {
+				return [
 					source,
 					target,
-				]))
-		))
-	).map(nodeId => nodes.find(({ id }) => id === nodeId))
+				].some(node => currentNodeIds.includes(node))
+			})
 
-	const normalizedGroups = Array.from(
-		(new Set(
-			normalizedNodes.map(({ group }) => group)
-		))
-	).map(groupName => groups.find(group => group.id === groupName))
+	const linkedNodeIds = normalizedLinks
+		.flatMap(({ source, target }) => {
+			return ([
+				source,
+				target,
+			])
+		})
+	const normalizedNodes = getUnique(linkedNodeIds)
+		.map(nodeId => nodes
+			.find(({ id }) => id === nodeId)
+		)
 
 	simulation = runSimulation({
 		simulation,
-		nodes: normalizedNodes,
-		links: normalizedLinks,
-		groups: normalizedGroups,
+		nodes: deepClone(normalizedNodes),
+		links: deepClone(normalizedLinks),
+		groups: deepClone(groups),
 	})
 
-	render({
-		nodes: normalizedNodes,
-		links: normalizedLinks,
-		groups: normalizedGroups
+	render(simulation, {
+		currentFilter: groupId,
 	})
 }
 
@@ -76,4 +76,12 @@ function renderFilters(groups) {
 			rerender("all")
 		})
 
+}
+
+function getUnique(array) {
+	return Array.from((new Set(array)))
+}
+
+function deepClone(object) {
+	return JSON.parse(JSON.stringify(object))
 }

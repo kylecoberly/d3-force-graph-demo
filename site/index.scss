@@ -102,6 +102,15 @@ body {
 	stroke-width: 1px;
 }
 
+text.disabled {
+	fill: $grey-9;
+	font-size: 0.15em;
+}
+
+path.disabled {
+	fill: none;
+}
+
 .domain {
 	opacity: 0;
 }
