@@ -3,66 +3,77 @@ const { nodes, links, groups } = data
 import runSimulation from "./chart/simulation/simulation.js"
 import render from "./chart/rendering/render.js"
 
-const $nodeFiltersList = document.querySelector("#node-filters-list")
+renderFilters(groups)
 
-const $allOption = document.createElement("option")
-$allOption.value = "all"
-$allOption.textContent = "All"
-$nodeFiltersList.append($allOption)
-
-Object
-	.values(groups)
-	.map(group => {
-		const $option = document.createElement("option")
-		$option.textContent = group.label
-		$option.value = group.id
-		return $option
-	}).forEach($option => {
-		$nodeFiltersList.append($option)
-	})
-
-document
-	.querySelector("#reset-filters")
-	.addEventListener("click", () => {
-		rerender("all")
-	})
-
-$nodeFiltersList
-	.addEventListener("input", (event) => {
-		rerender(event.target.value)
-	})
-
-let simulation = runSimulation({
-	nodes, links, groups
-})
+let simulation
 rerender("all")
 
 function rerender(id) {
 	const normalizedLinks = id === "all"
 		? links
-		: links.filter(({ source, target }) => [source.group, target.group].includes(id))
-	const uniqueNodeIds = Array.from(
+		: links
+			.filter(({ source, target }) => ([
+				source.group,
+				target.group
+			].includes(id)))
+
+	const normalizedNodes = Array.from(
 		(new Set(
-			normalizedLinks.flatMap(({ source, target }) => (
-				[source.id, target.id]
-			))
+			normalizedLinks
+				.flatMap(({ source, target }) => ([
+					source,
+					target,
+				]))
 		))
-	)
-	const uniqueNodes = nodes.filter(node => uniqueNodeIds.includes(node.id))
-	const normalizedGroups = id === "all"
-		? simulation.groups
-		: { [id]: simulation.groups[id] }
+	).map(nodeId => nodes.find(({ id }) => id === nodeId))
+
+	const normalizedGroups = Array.from(
+		(new Set(
+			normalizedNodes.map(({ group }) => group)
+		))
+	).map(groupName => groups.find(group => group.id === groupName))
 
 	simulation = runSimulation({
 		simulation,
-		nodes: uniqueNodes,
+		nodes: normalizedNodes,
 		links: normalizedLinks,
 		groups: normalizedGroups,
 	})
 
 	render({
-		nodes: uniqueNodes,
+		nodes: normalizedNodes,
 		links: normalizedLinks,
 		groups: normalizedGroups
 	})
+}
+
+function renderFilters(groups) {
+	const $nodeFiltersList = document.querySelector("#node-filters-list")
+
+	const $allOption = document.createElement("option")
+	$allOption.value = "all"
+	$allOption.textContent = "All"
+	$nodeFiltersList.append($allOption)
+
+	groups
+		.map(group => {
+			const $option = document.createElement("option")
+			$option.textContent = group.label
+			$option.value = group.id
+			return $option
+		}).forEach($option => {
+			$nodeFiltersList.append($option)
+		})
+
+	$nodeFiltersList
+		.addEventListener("input", (event) => {
+			rerender(event.target.value)
+		})
+
+	document
+		.querySelector("#reset-filters")
+		.addEventListener("click", () => {
+			rerender("all")
+		})
+
 }
