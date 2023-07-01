@@ -1,6 +1,13 @@
 import { line, curveCatmullRomClosed, polygonHull } from "d3"
+import options from "./options.js"
 
-export default function getSmoothHull(rawPoints, hullPadding = 60) {
+const {
+	chart: {
+		hullPadding,
+	},
+} = options
+
+export default function getSmoothHull(rawPoints) {
 	const points = getHullPoints(rawPoints)
 	const pointCount = points.length
 

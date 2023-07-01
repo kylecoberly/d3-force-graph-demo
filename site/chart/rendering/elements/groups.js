@@ -1,27 +1,20 @@
-import { move, fadeIn } from "../../utilities.js"
-import getSmoothHull from "../../hull.js"
-import options from "../options.js"
+import { move, fadeIn } from "../animations.js"
+import getSmoothHull from "../hull.js"
 
-const {
-	chart: {
-		hullPadding,
-	},
-} = options
-
-
-export default function renderGroups(group, groups) {
-	group.call(fadeIn)
+export default function renderGroups(group) {
+	group
+		.call(fadeIn)
 
 	group
 		.append("path")
-		.attr("d", ({ points }) => getSmoothHull(points, hullPadding))
-		.attr("fill", ({ id }) => groups[id]["background-color"])
+		.attr("d", ({ points }) => getSmoothHull(points))
+		.attr("fill", (group) => group["background-color"])
 
 	group
 		.append("text")
 		.classed("group-label", true)
 		.call(move)
-		.attr("fill", ({ id }) => groups[id]["foreground-color"])
+		.attr("fill", (group) => group["foreground-color"])
 		.attr("text-anchor", "middle")
-		.text(({ id }) => groups[id].label)
+		.text(({ label }) => label)
 }

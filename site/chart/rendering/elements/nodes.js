@@ -1,5 +1,5 @@
 import { select, zoomIdentity } from "d3"
-import { move, fadeIn } from "../../utilities.js"
+import { move } from "../animations.js"
 import { zoom } from "../zoom.js"
 import options from "../options.js"
 
@@ -47,6 +47,7 @@ function centerNode({ element, zoom, x, y, settings }) {
 
 	element
 		// Do this with CSS animations instead instead
+		// A transition is just calling these with tweened values lots of times per second!
 		// .transition()
 		// .duration(duration)
 		.call(zoom.transform, transform)

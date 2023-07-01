@@ -50,8 +50,8 @@ function rerender(id) {
 	)
 	const uniqueNodes = nodes.filter(node => uniqueNodeIds.includes(node.id))
 	const normalizedGroups = id === "all"
-		? groups
-		: { [id]: groups[id] }
+		? simulation.groups
+		: { [id]: simulation.groups[id] }
 
 	simulation = runSimulation({
 		simulation,

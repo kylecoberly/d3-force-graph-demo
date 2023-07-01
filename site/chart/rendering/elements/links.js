@@ -1,12 +1,4 @@
-import { fadeIn } from "../../utilities.js"
-import options from "../options.js"
-import { toDegrees } from "../../utilities.js"
-const {
-	chart: {
-		transitionRate,
-	},
-} = options
-
+import { moveLink, fadeIn } from "../animations.js"
 
 export default function addLinks(link) {
 	link
@@ -22,11 +14,6 @@ export default function addLinks(link) {
 }
 
 function renderArrows(link) {
-	const offset = {
-		x: 0,
-		y: -1,
-	}
-
 	link
 		.append("g")
 		.append("use")
@@ -34,14 +21,7 @@ function renderArrows(link) {
 		.attr("width", 2)
 		.attr("height", 2)
 		.classed("ant", true)
-		.transition()
-		.duration(transitionRate)
-		.attr("transform", ({ target, source }) => {
-			const dx = target.x - source.x
-			const dy = target.y - source.y
-			const angle = toDegrees(Math.atan2(dy, dx))
-			return `rotate(${angle}) translate(${offset.x}, ${offset.y})`
-		})
+		.call(moveLink)
 
 	link
 		.append("animateMotion")

@@ -1,7 +1,6 @@
 import { select } from "d3"
 import options from "./options.js"
-import { getCentroids, move, fadeIn } from "../utilities.js"
-import getSmoothHull from "../hull.js"
+import { move, movePath, fadeIn } from "./animations.js"
 
 import "./chart.js"
 import "./elements/icons.js"
@@ -12,7 +11,6 @@ import renderGroups from "./elements/groups.js"
 const {
 	chart: {
 		transitionRate,
-		hullPadding,
 	},
 } = options
 
@@ -49,36 +47,21 @@ export default function render({ groups, nodes, links }) {
 		)
 
 	select(".bounds").selectAll(".domain")
-		.data(Object.values(groups), ({ id }) => id)
+		.data(groups, ({ id }) => id)
 		.join(
 			enter => enter
 				.append("g")
 				.classed("domain", true)
-				.each(setGroupData(nodes))
 				.call(renderGroups, groups)
 				.lower(),
 			update => update
-				.each(setGroupData(nodes))
 				.call(group => group
 					.select("path")
-					.transition()
-					.duration(transitionRate)
-					// Redundant?
-					.attr("d", ({ points }) => getSmoothHull(points, hullPadding))
-				)
-				.call(group => group.select("text").call(move)),
+					.call(movePath)
+				).call(group => group
+					.select("text")
+					.call(move)
+				),
 			exit => exit.remove(),
 		)
-}
-
-function setGroupData(nodes) {
-	return d => {
-		const groupCenters = getCentroids(nodes)
-		const { id } = d
-		d.x = groupCenters[id].x
-		d.y = groupCenters[id].y
-		d.points = nodes
-			.filter(({ group }) => group === id)
-			.map(({ x, y }) => [x, y])
-	}
 }

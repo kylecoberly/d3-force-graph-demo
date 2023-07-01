@@ -111,6 +111,10 @@ body {
 	opacity: 0;
 }
 
+.bounds {
+	transition: transform 1s;
+}
+
 .arrow {
 	fill: #ccc;
 	stroke-width: 0.1px;

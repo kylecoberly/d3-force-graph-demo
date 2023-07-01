@@ -1,34 +1,42 @@
-import { getCentroids } from "../../utilities.js"
+import simulationOptions from "../options.js"
 
-export default function attractGroups(simulation, {
-	alphaCutoff,
-	chargeStrength,
-	distanceCutoff,
-	distanceRate,
-}) {
+const {
+	simulation: {
+		alphaCutoff,
+	},
+	forces: {
+		group: {
+			charge: groupCharge,
+			distance: groupDistance,
+		},
+	},
+} = simulationOptions
+
+export default function attractGroups(simulation) {
 	const nodes = simulation.nodes()
 	const alpha = simulation.alpha()
-
-	const centroids = getCentroids(nodes)
-	nodes.forEach(d => {
-		const groupCenter = {
-			x: centroids[d.group].x,
-			y: centroids[d.group].y,
+	const groupCenters = simulation.groups.reduce((centers, group) => {
+		centers[group.id] = {
+			x: group.x,
+			y: group.y,
 		}
-		const nodePosition = {
-			x: d.x,
-			y: d.y,
+		return centers
+	}, {})
+
+	nodes.forEach(node => {
+		node.groupCenter = {
+			x: groupCenters[node.group].x,
+			y: groupCenters[node.group].y,
 		}
-		const distanceToGroup = getDistance(groupCenter, nodePosition)
 
-		let adjustedDistanceCutoff = (alpha < alphaCutoff)
-			? distanceCutoff + (distanceRate * (alphaCutoff - alpha))
-			: distanceCutoff
-
-		const charge = 1 - chargeStrength
+		const distanceToGroup = getDistance(node.groupCenter, { x, y } = node)
+		const adjustedDistanceCutoff = (alpha < alphaCutoff)
+			? groupDistance.cutoff + (groupDistance.rate * (alphaCutoff - alpha))
+			: groupDistance.cutoff
+		const charge = 1 - groupCharge.initial
 		if (distanceToGroup > adjustedDistanceCutoff) {
-			d.x = (nodePosition.x * charge) + (groupCenter.x * charge)
-			d.y = (nodePosition.y * charge) + (groupCenter.y * charge)
+			node.x = (node.x * charge) + (node.groupCenter.x * charge)
+			node.y = (node.y * charge) + (node.groupCenter.y * charge)
 		}
 	})
 }
